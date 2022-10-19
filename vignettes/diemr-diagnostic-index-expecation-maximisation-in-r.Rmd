@@ -89,8 +89,8 @@ arbitrated by the data.
 
 With the marker polarities optimised to detect a barrier to geneflow, a plot of the 
 polarised genome will show how genomic regions cross the barrier. First, the genotypes
-need to be imported with optimal marker polarities, second, individual hybrid indices 
-need to be calculated from the polarised genotypes, and last, the data will be plotted
+need to be imported with optimal marker polarities. Second, individual hybrid indices 
+need to be calculated from the polarised genotypes. And last, the data will be plotted
 as a raster image.
 ```{r, eval = FALSE}
 genotypes <- importPolarized(file = filepaths, 
@@ -127,7 +127,7 @@ S02221U
 The genotypes encoded as `0` represent homozygots for an allele attributed to barrier side A, `1` are 
 heterozygous genotypes, `2` are homozygots for another allele, attributed to barrier side B, and `U` 
 (symbol "_" is also allowed) represents an unknown state or a third (fourth) allele. The power of 
-`diemr` lies in the safety that the user does not need to determine the true assignment to the 
+`diem` lies in the safety that the user does not need to determine the true assignment to the 
 barrier sides A and B before the analysis and the specific genotypes encoded as `0` and `2` respectively 
 can be arbitrary.
 
@@ -141,9 +141,9 @@ the dataset is imported as a character matrix of all markers.
 # Multiple compartments with different ploidies
 Some genomic compartments differ between individuals in their ploidy. For example, markers located on 
 chromosome X in mammals will be diploid in females, but haploid in males. Ploidy differences between 
-individuals influence calculation of the hybrid index, which in turn has an effect on the diem analysis.
+individuals influence calculation of the hybrid index, which in turn has an effect on the _diem_ analysis.
 
-To set up the diem analysis with multiple compartments, the markers with different individual ploidies
+To set up the _diem_ analysis with multiple compartments, the markers with different individual ploidies
 must be stored in separate files. The file analysed in the **Quick start** chapter could contain
 markers from autosomes and an additional file will contain markers from an X
 chromosome, with individuals 2 and 6 being males. The respective ploidies for the second genomic 
@@ -168,7 +168,7 @@ CheckDiemFormat(files = filepaths2,
 # File check passed: TRUE
 # Ploidy check passed: TRUE
 
-# Set random seed for repeatibility (optional)
+# Set random seed for repeatibility of null polarities (optional)
 set.seed(39583782)
 
 # Run diem with verbose = TRUE to store hybrid indices with ploidy-aware allele counts
@@ -219,7 +219,7 @@ diemr::plotPolarized(genotypes = genotypes2,
 # Frequently asked questions
 1. **How can I install `diemr` from the source?**
 ```{r, eval = FALSE}
-install.packages(package = "diemr_1.0.tar.gz",
+install.packages(package = "diemr_1.1.tar.gz",
                  repos = NULL, type = "source")
 ```
 Make sure to set the `R` working directory to the folder, where the package tarball is stored, 
@@ -280,8 +280,13 @@ h.res2.c <- diffs$rollmean[which.max(diffs$diff)]
 ```
 Since the center of the barrier is at 0.67 now, `diem` separated individuals 1, 3, and 4 from a group that includes 5, 6. Combined with the result from the first `diem` run, we have identified three groups in the dataset: (2), (1, 3, 4), and (5, 6).
 
-4. **How to cite `diemr`?**
+
+4. **The hybrid indices in my dataset are too similar. I expected them to look more like the rescaled hybrid indices. What is wrong?**
+
+The input data probably contains invariant sites, which weight the hybrid indices to be similar between individuals. Make sure to use only variable sites. Alternatively, filter sites with lowest diagnostic index after the `diem` analysis and recalculate the hybrid indices with the filtered data.
+
+5. **How to cite `diemr`?**
 
 To use `diemr` in a publication, please cite:
 
-Baird S. J. E., Petruzela J., Jaron I., Skrabanek P., Martinkova N. 2022. diemr: Genome polarisation for detecting barriers to geneflow in R. bioRxiv 2022.03.24.485605, doi: 10.1101/2022.03.24.485605.
+Baird S. J. E., Petruzela J., Jaron I., Skrabanek P., Martinkova N. 2022. Genome polarisation for detecting barriers to geneflow. Methods in Ecology and Evolution, doi: 10.1111/2041-210X.14010.

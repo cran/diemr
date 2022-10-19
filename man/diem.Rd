@@ -9,7 +9,7 @@ diem(
   ploidy = list(2),
   markerPolarity = FALSE,
   ChosenInds,
-  epsilon = 0.99,
+  epsilon = 0.99999,
   verbose = FALSE,
   nCores = parallel::detectCores() - 1,
   maxIterations = 50,
@@ -43,8 +43,8 @@ be saved.}
 }
 \value{
 A list including suggested marker polarities, diagnostic indices and support for all
-markers, four-state counts matrix for all individuals, and polarity changes for the
-EM iterations.
+markers, four genomic state counts matrix for all individuals, and polarity changes
+for the EM iterations.
 }
 \description{
 Estimates how to assign alleles in a genome to maximise the distinction between two

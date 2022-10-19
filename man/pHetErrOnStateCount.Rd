@@ -12,7 +12,7 @@ homozygots for allele 1, heterozygots, and homozygots for allele 2.}
 }
 \value{
 Returns a named numeric vector with three values: p - hybrid index,
-Het - heterozigosity,
+Het - heterozygosity,
 Err - error rate.
 }
 \description{

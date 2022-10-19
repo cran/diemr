@@ -1,21 +1,35 @@
-citHeader("To cite diemr in publications use:")
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
 
 
-citEntry(entry = "article",
-  title        = "{diemr}: Genome polarisation for detecting barriers to geneflow in {R}",
-  author       = personList(as.person("Stuart J. E. Baird"),
-  					as.person("Jan Petruzela"),
-  					as.person("Izar Jaron"),
-  					as.person("Pavel Skrabanek"),
-  					as.person("Natalia Martinkova")
+bibentry(bibtype = "article",
+  title        = "Genome polarisation for detecting barriers to geneflow",
+  author       = c(person(c("Stuart J. E."), "Baird"),
+  					person("Jan", "Petruzela"),
+  					person("Izar", "Jaron"),
+  					person("Pavel", "Skrabanek"),
+  					person("Natalia", "Martinkova")
                    ),
   year         = "2022",
-  journal	   = "bioRxiv",
-  pages		   = "2022.03.24.485605",
-  doi          = "10.1101/2022.03.24.485605",
+  journal	   = "Methods in Ecology and Evolution",
+  pages		   = "",
+  doi          = "10.1111/2041-210X.14010",
+  note = "available from 15 Nov 2022",
 
   textVersion  =
   paste("Baird S. J. E., Petruzela J., Jaron I., Skrabanek P., and Martinkova N. (2022).",
-        "diemr: Genome polarisation for detecting barriers to geneflow in R.",
-        "bioRxiv: 2022.03.24.485605, doi: 10.1101/2022.03.24.485605.")
+        "Genome polarisation for detecting barriers to geneflow.",
+        "Methods in Ecology and Evolution, doi: 10.1111/2041-210X.14010.")
 )
+
+bibentry(bibtype = "Manual", 
+		 title = "{diemr}: Genome polarisation for detecting barriers to geneflow in {R}",
+		 author = c(person(c("Stuart J. E."), "Baird"),
+  					person("Jan", "Petruzela"),
+  					person("Izar", "Jaron"),
+  					person("Pavel", "Skrabanek"),
+  					person("Natalia", "Martinkova")
+                   ),
+		 year = year,
+		 note = note,
+		 url = "https://CRAN.R-project.org/package=diemr")

@@ -1,4 +1,4 @@
-#' Imports genomic data polarized according to the the specification
+#' Imports genomic data polarized according to the specification
 #'
 #' Reads genotypes from a file and changes marker polarity.
 #'

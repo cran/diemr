@@ -4,7 +4,12 @@
 \alias{plotPolarized}
 \title{Plots polarized genotypes}
 \usage{
-plotPolarized(genotypes, HI, ...)
+plotPolarized(
+  genotypes,
+  HI,
+  cols = c("#FFFFFF", "#800080", "#FFE500", "#008080"),
+  ...
+)
 }
 \arguments{
 \item{genotypes}{character matrix comprising of _012 encodings.}
@@ -12,13 +17,16 @@ plotPolarized(genotypes, HI, ...)
 \item{HI}{numeric vector of individual hybrid indices with length equal to number
 of rows in \code{genotypes}.}
 
+\item{cols}{vector of four colours, representing missing data, homozygots for
+genotype 0, heterozygots and homozygots for genotype 2.}
+
 \item{...}{additional arguments.}
 }
 \value{
-No return value, called for side effects. In the plot, red and blue represent
-side of the barrier to geneflow encoded as \code{0} and \code{2}, respectively, yellow shows
-heterozygots and white missing or undetermined genotypes. Individuals are ordered
-according to the \code{HI}.
+No return value, called for side effects. In the default plot, purple and green
+represent side of the barrier to geneflow encoded as \code{0} and \code{2}, respectively,
+yellow shows heterozygots and white missing or undetermined genotypes. Individuals
+are ordered according to the \code{HI}.
 }
 \description{
 Plots genotypes that can be optionally polarized.

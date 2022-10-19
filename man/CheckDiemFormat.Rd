@@ -32,7 +32,7 @@ vignette with \code{browseVignettes(package = "diemr")} for the example of the
 input format.
 
 Ploidies must be given as a list with each element corresponding to a genomic
-compartment (aka a file). For each compartment, the numberic vector specifying
+compartment (aka a file). For each compartment, the numeric vector specifying
 ploidies of all individuals chosen for the specific analysis must be given.
 }
 \examples{

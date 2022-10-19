@@ -1,13 +1,22 @@
+# diemr 1.1, build
+
+- Updated README file.
+- Added user-choice of colours in `plotPolarized`.
+- Updated CITATION.
+- Added efficient correction for other markers in likelihood calculation. 
+
+
+
 # diemr 1.0, released 28-03-2022
 
-- First public release
-- Updated citation
+- First public release.
+- Updated citation.
 
 
 # diemr 0.3, build 12-01-2022
 
 - Added user choice of null polarities in the diem argument `markerPolarity`.
-- Added FAQ to vignette
+- Added FAQ to vignette.
 - Added functions `importPolarized` and `plotPolarized`.
 
 

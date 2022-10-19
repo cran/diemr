@@ -79,7 +79,7 @@ diemr::plotPolarized(genotypes = genotypes,
 #  # File check passed: TRUE
 #  # Ploidy check passed: TRUE
 #  
-#  # Set random seed for repeatibility (optional)
+#  # Set random seed for repeatibility of null polarities (optional)
 #  set.seed(39583782)
 #  
 #  # Run diem with verbose = TRUE to store hybrid indices with ploidy-aware allele counts
@@ -121,7 +121,7 @@ diemr::plotPolarized(genotypes = genotypes2,
               HI = h2)
 
 ## ---- eval = FALSE------------------------------------------------------------
-#  install.packages(package = "diemr_1.0.tar.gz",
+#  install.packages(package = "diemr_1.1.tar.gz",
 #                   repos = NULL, type = "source")
 
 ## ---- eval = FALSE------------------------------------------------------------

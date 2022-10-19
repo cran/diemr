@@ -12,92 +12,107 @@
 
 <meta name="author" content="Natália Martínková" />
 
-<meta name="date" content="2022-03-28" />
+<meta name="date" content="2022-10-19" />
 
 <title>diemr: Diagnostic index expectation maximisation in R</title>
 
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
 
 
 <style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
 </style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
 div.sourceCode
-  {  }
+{ }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -106,13 +121,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -316,170 +338,271 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<h1 class="title toc-ignore">diemr: Diagnostic index expectation maximisation in R</h1>
+<h1 class="title toc-ignore">diemr: Diagnostic index expectation
+maximisation in R</h1>
 <h4 class="author">Natália Martínková</h4>
-<h4 class="date">2022-03-28</h4>
+<h4 class="date">2022-10-19</h4>
 
 
 
 <div id="quick-start" class="section level1">
 <h1>Quick start</h1>
-<p>The package <code>diemr</code> incorporates the diagnostic index expectation maximisation algorithm used to estimate which genomic alleles belong to which side of a barrier to geneflow. To start using <code>diemr</code>, load the package or install it from CRAN if it is not yet available:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># Attempt to load a package, if the package was not available, install and load</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="cf">if</span>(<span class="op">!</span><span class="kw">require</span>(<span class="st">&quot;diemr&quot;</span>, <span class="dt">character.only =</span> <span class="ot">TRUE</span>)){</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">    <span class="kw">install.packages</span>(<span class="st">&quot;diemr&quot;</span>, <span class="dt">dependencies =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">    <span class="kw">library</span>(<span class="st">&quot;diemr&quot;</span>, <span class="dt">character.only =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5">}</a></code></pre></div>
-<p>Next, assemble paths to all files containing the data to be used by <code>diemr</code>. Here, we will use a tiny example dataset that is included in the package for illustrating the analysis workflow. A good practice is to check that all files contain data in the correct format for all individuals and markers. Additionally, the analysis will need a list with ploidies for all genomic compartments and individuals, and a vector with indices of samples that will be included in the analysis.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">filepaths &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;data6x3.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;diemr&quot;</span>)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co"># Assuming diploid markers of all individuals</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">ploidies &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">rep</span>(<span class="dv">2</span>, <span class="dv">6</span>))</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co"># Analysing all individuals</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">samples &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">6</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="kw">CheckDiemFormat</span>(<span class="dt">files =</span> filepaths, </a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">                <span class="dt">ChosenInds =</span> samples,</a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">                <span class="dt">ploidy =</span> ploidies)</a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co"># File check passed: TRUE</span></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co"># Ploidy check passed: TRUE</span></a></code></pre></div>
-<p>If the <code>CheckDiemFormat()</code> function fails, work through the error messages and fix the stored input files accordingly. The algorithm repeatedly accesses data from the harddisk, so seeing the passed file and variable check prior to the analysis is critical.</p>
-<p>To estimate the marker polarities, their diagnostic indices and support, run the function <code>diem()</code> with default settings. Here, we have only one file with data, so paralelisation is unnecessary, and we set <code>nCores = 1</code>. <strong>This setting must always be used on Windows</strong>. Other operating systems can process multiple genomic compartments (e.g. chromosomes) in parallel, and the analysis of different genomic compartment files can run on multiple processors.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">res &lt;-<span class="st"> </span><span class="kw">diem</span>(<span class="dt">files =</span> filepaths, </a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">            <span class="dt">ploidy =</span> ploidies, </a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">            <span class="dt">markerPolarity =</span> <span class="kw">list</span>(<span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>)),</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">            <span class="dt">ChosenInds =</span> samples, </a>
-<a class="sourceLine" id="cb3-5" data-line-number="5">            <span class="dt">nCores =</span> <span class="dv">1</span>)</a></code></pre></div>
-<p>The result is a list, where the element <code>res$DI</code> contains a table with marker polarities, their diagnostic indices and support.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">res<span class="op">$</span>DI</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co">#   newPolarity         DI   Support Marker</span></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co"># 1       FALSE  -4.872256 15.930181      1</span></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co"># 2        TRUE  -3.520647 18.633399      2</span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co"># 3        TRUE -13.274822  6.130625      3</span></a></code></pre></div>
-<p>The column <code>newPolarity</code> means that marker 1 should be imported for subsequent analyses as is, and markers 2 and 3 should be imported with 0 replaced with 2 and 2 replaced with 0. The marker 3 has the lowest diagnostic index and low support, indicating that the genotypes scored at this marker are poorly related to the barrier to geneflow arbitrated by the data.</p>
-<p>With the marker polarities optimised to detect a barrier to geneflow, a plot of the polarised genome will show how genomic regions cross the barrier. First, the genotypes need to be imported with optimal marker polarities, second, individual hybrid indices need to be calculated from the polarised genotypes, and last, the data will be plotted as a raster image.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">genotypes &lt;-<span class="st"> </span><span class="kw">importPolarized</span>(<span class="dt">file =</span> filepaths, </a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">                             <span class="dt">changePolarity =</span> res<span class="op">$</span>markerPolarity, </a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">                             <span class="dt">ChosenInds =</span> samples)</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4">                             </a>
-<a class="sourceLine" id="cb5-5" data-line-number="5">h &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="dt">X =</span> res<span class="op">$</span>I4, </a>
-<a class="sourceLine" id="cb5-6" data-line-number="6">           <span class="dt">MARGIN =</span> <span class="dv">1</span>, </a>
-<a class="sourceLine" id="cb5-7" data-line-number="7">           <span class="dt">FUN =</span> pHetErrOnStateCount)[<span class="dv">1</span>, ]</a>
-<a class="sourceLine" id="cb5-8" data-line-number="8">           </a>
-<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="kw">plotPolarized</span>(<span class="dt">genotypes =</span> genotypes,</a>
-<a class="sourceLine" id="cb5-10" data-line-number="10">              <span class="dt">HI =</span> h)</a></code></pre></div>
-<p><img src="data:image/png;base64,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AQHIMUCAAAECBAg0TkAAalzLFUyAAAECBAgIQI4BAgQIECBAoHECAlDjWq5gAgQIECBAQAByDBAgQIAAAQKNExCAGtdyBRMgQIAAAQICkGOAAAECBAgQaJyAANS4liuYAAECBAgQEIAcAwQIECBAgEDjBASgxrVcwQQIECBAgIAA5BggQIAAAQIEGicgADWu5QomQIAAAQIEBCDHAAECBAgQINA4AQGocS1XMAECBAgQICAAOQYIECBAgACBxgkIQI1ruYIJECBAgAABAcgxQIAAAQIECDROQABqXMsVTIAAAQIECAhAjgECBAgQIECgcQICUONarmACBAgQIEBAAHIMECBAgAABAo0TEIAa13IFEyBAgAABAgKQY4AAAQIECBBonIAA1LiWK5gAAQIECBAQgBwDBAgQIECAQOMEBKDGtVzBBAgQIECAgADkGCBAgAABAgQaJyAANa7lCiZAgAABAgQEIMcAAQIECBAg0DgBAahxLVcwAQIECBAgIAA5BggQIECAAIHGCQhAjWu5ggkQIECAAAEByDFAgAABAgQINE5AAGpcyxVMgAABAgQICECOAQIECBAgQKBxAgJQ41quYAIECBAgQEAAcgwQIECAAAECjRMQgBrXcgUTIECAAAECOyB46wLrX9n41t/snQQIEOiiwPChO3Vx73ZNoPsCAtBb7EEKP5PPuPEtvtvbCBAg0F2Be686vrsTsHcCXRZwCazLDbB7AgQIECBAoPMCAlDnze2RAAECBAgQ6LKAANTlBtg9AQIECBAg0HkBAajz5vZIgAABAgQIdFlAAOpyA+yeAAECBAgQ6LyAANR5c3skQIAAAQIEuiwgAHW5AXZPgAABAgQIdF5AAOq8uT0SIECAAAECXRYQgLrcALsnQIAAAQIEOi8gAHXe3B4JECBAgACBLgsIQF1ugN0TIECAAAECnRcQgDpvbo8ECBAgQIBAlwUEoC43wO4JECBAgACBzgsIQJ03t0cCBAgQIECgywICUJcbYPcECBAgQIBA5wUEoM6b2yMBAgQIECDQZQEBqMsNsHsCBAgQIECg8wICUOfN7ZEAAQIECBDosoAA1OUG2D0BAgQIECDQeQEBqPPm9kiAAAECBAh0WUAA6nID7J4AAQIECBDovIAA1HlzeyRAgAABAgS6LCAAdbkBdk+AAAECBAh0XkAA6ry5PRIgQIAAAQJdFhCAutwAuydAgAABAgQ6LyAAdd7cHgkQIECAAIEuCwhAXW6A3RMgQIAAAQKdFxCAOm9ujwQIECBAgECXBQSgLjfA7gkQIECAAIHOCwhAnTe3RwIECBAgQKDLAgJQlxtg9wQIECBAgEDnBQSgzpvbIwECBAgQINBlAQGoyw2wewIECBAgQKDzAgJQ583tkQABAgQIEOiygADU5QbYPQECBAgQINB5AQGo8+b2SIAAAQIECHRZQADqcgPsngABAgQIEOi8gADUeXN7JECAAAECBLosIAB1uQF2T4AAAQIECHReQADqvLk9EiBAgAABAl0WEIC63AC7J0CAAAECBDovsEPnd2mPBAgQINB9gZu7PwUzqLHAga/Xtm+p63MGqNTtMTkCBAgQIECgCAEBqAhV2yRAgAABAgRKLSAAlbo9JkeAAAECBAgUISAAFaFqmwQIECBAgECpBQSgUrfH5AgQIECAAIEiBASgIlRtkwABAgQIECi1gABU6vaYHAECBAgQIFCEgABUhKptEiBAgAABAqUWEIBK3R6TI0CAAAECBIoQEICKULVNAgQIECBAoNQCAlCp22NyBAgQIECAQBECAlARqrZJgAABAgQIlFpAACp1e0yOAAECBAgQKEJAACpC1TYJECBAgACBUgsIQKVuj8kRIECAAAECRQgIQEWo2iYBAgQIECBQagEBqNTtMTkCBAgQIECgCAEBqAhV2yRAgAABAgRKLSAAlbo9JkeAAAECBAgUISAAFaFqmwQIECBAgECpBQSgUrfH5AgQIECAAIEiBASgIlRtkwABAgQIECi1gABU6vaYHAECBAgQIFCEgABUhKptEiBAgAABAqUWEIBK3R6TI0CAAAECBIoQEICKULVNAgQIECBAoNQCAlCp22NyBAgQIECAQBECAlARqrZJgAABAgQIlFpAACp1e0yOAAECBAgQKEJAACpC1TYJECBAgACBUgsIQKVuj8kRIECAAAECRQgIQEWo2iYBAgQIECBQagEBqNTtMTkCBAgQIECgCAEBqAhV2yRAgAABAgRKLSAAlbo9JkeAAAECBAgUISAAFaFqmwQIECBAgECpBQSgUrfH5AgQIECAAIEiBASgIlRtkwABAgQIECi1gABU6vaYHAECBAgQIFCEgABUhKptEiBAgAABAqUWEIBK3R6TI0CAAAECBIoQEICKULVN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AQJFCAhARajaJgECBAgQIFBqAQGo1O0xOQIECBAgQKAIAQGoCFXbJECAAAECBEotIACVuj0mR4AAAQIECBQhIAAVoWqbBAgQIECAQKkFBKBSt8fkCBAgQIAAgSIEBKAiVG2TAAECBAgQKLWAAFTq9pgcAQIECBAgUISAAFSEqm0SIECAAAECpRbYodSzK/HkXlvzSjxw8BklnqGpESBAgAABAq0EnAFqJWOcAAECBAgQqK2AAFTb1iqMAAECBAgQaCUgALWSMU6AAAECBAjUVkAAqm1rFUaAAAECBAi0EhCAWskYJ0CAAAECBGorIADVtrUKI0CAAAECBFoJCECtZIwTIECAAAECtRUQgGrbWoURIECAAAECrQQEoFYyxgkQIECAAIHaCghAtW2twggQIECAAIFWAgJQKxnjBAgQIECAQG0FBKDatlZhBAgQIECAQCsBAaiVjHECBAgQIECgtgICUG1bqzACBAgQIECglYAA1ErGOAECBAgQIFBbAQGotq1VGAECBAgQINBKQABqJWOcAAECBAgQqK2AAFTb1iqMAAECBAgQaCUgALWSMU6AAAECBAjUVkAAqm1rFUaAAAECBAi0EhCAWskYJ0CAAAECBGorIADVtrUKI0CAAAECBFoJCECtZIwTIECAAAECtRUQgGrbWoURIECAAAECrQQEoFYyxgkQIECAAIHaCghAtW2twggQIECAAIFWAgJQKxnjBAgQIECAQG0FBKDatlZhBAgQIECAQCsBAaiVjHECBAgQIECgtgICUG1bqzACBAgQIECglYAA1ErGOAECBAgQIFBbAQGotq1VGAECBAgQINBKQABqJWOcAAECBAgQqK2AAFTb1iqMAAECBAgQaCUgALWSMU6AAAECBAjUVkAAqm1rFUaAAAECBAi0EhCAWskYJ0CAAAECBGorIADVtrUKI0CAAAECBFoJCECtZIwTIECAAAECtRUQgGrbWoURIECAAAECrQQEoFYyxgkQIECAAIHaCgzY8vpS2+oURoAAAQIECBDIEXAGKAfFEAECBAgQIFBvAQGo3v1VHQECBAgQIJAjIADloBgiQIAAAQIE6i0gANW7v6ojQIAAAQIEcgQEoBwUQwQIECBAgEC9BQSgevdXdQQIECBAgECOgACUg2KIAAECBAgQqLeAAFTv/qqOAAECBAgQyBEQgHJQDBEgQIAAAQL1FhCA6t1f1REgQIAAAQI5AgJQDoohAgQIECBAoN4CAlC9+6s6AgQIECBAIEdAAMpBMUSAAAECBAjUW0AAqnd/VUeAAAECBAjkCAhAOSiGCBAgQIAAgXoLCED17q/qCBAgQIAAgRwBASgHxRABAgQIECBQbwEBqN79VR0BAgQIECCQIyAA5aAYIkCAAAECBOotIADVu7+qI0CAAAECBHIEBKAcFEMECBAgQIBAvQUEoHr3V3UECBAgQIBAjoAAlINiiAABAgQIEKi3gABU7/6qjgABAgQIEMgREIByUAwRIECAAAEC9RYQgOrdX9URIECAAAECOQICUA6KIQIECBAgQKDeAgJQvfurOgIECBAgQCBHQADKQTFEgAABAgQI1FtAAKp3f1VHgAABAgQI5AgIQDkohggQIECAAIF6CwhA9e6v6ggQIECAAIEcAQEoB8UQAQIECBAgUG8BAaje/VUdAQIECBAgkCMgAOWgGCJAgAABAgTqLSAA1bu/qiNAgAABAgRyBASgHBRDBAgQIECAQL0FBKB691d1BAgQIECAQI6AAJSDYogAAQIECBCot4AAVO/+qo4AAQIECBDIERCAclAMESBAgAABAvUWEIDq3V/VESBAgAABAjkCAlAOiiECBAgQIECg3gICUL37qzoCBAgQIEAgR0AAykExRIAAAQIECNRbQACqd39VR4AAAQIECOQICEA5KIYIECBAgACBegsIQPXur+oIECBAgACBHAEBKAfFEAECBAgQIFBvAQGo3v1VHQECBAgQIJAjIADloBgiQIAAAQIE6i0gANW7v6ojQIAAAQIEcgQEoBwUQwQIECBAgEC9BQSgevdXdQQIECBAgECOgACUg2KIAAECBAgQqLeAAFTv/qqOAAECBAgQyBEQgHJQDBEgQIAAAQL1FhCA6t1f1REgQIAAAQI5AgJQDoohAgQIECBAoN4CAlC9+6s6AgQIECBAIEdAAMpBMUSAAAECBAjUW0AAqnd/VUegawLjx4+PAQMGxAknnJA7h1WrVsXAgQOzdZ566qncdfo6eMstt2TbWbFiRV/fYj0CBBouIAA1/ABQPoEiBVLAufnmm+Nf//rXdrv5+c9/Hps3b95u3AABAgQ6ISAAdULZPgg0VODDH/5wrFmzJu64447tBG688caYMGHCduMGCBAg0AkBAagTyvZBoKECe+21V3zwgx+Mn/3sZ9sIrF69On73u9/FJz/5yW3G04tf/OIXkYLT29/+9hg9enQce+yx8eijj/as99WvfjXmzJkTs2fPjne+853Z755//u8fr776asyYMSM+8YlPRPo7La+88kqcdtppsc8++8Ruu+0W06ZNiyeffPJ/3xGxZMmSOOKIIyJdThszZkwceeSR8dJLL8Uf/vCHmDRpUgwbNix774knnpiFup43+oMAgUoKCECVbJtJE6iOQAohKdRs2bKlZ9Lp9WGHHRZjx47tGUt//PSnP43p06fHwQcfHFdeeWV89rOfjfvvvz8LMltXfOKJJ+KHP/xhXHfddTF58uR4xzvesfVf2e90uW3mzJlx7733xsUXXxxDhgzJ9v3Rj3405s+fH7NmzYrvfve78eKLL8YHPvCBnjCzbt26uO++++KUU06JD33oQzF8+PAYNGhQFsDSNr7//e/H2WefHQsXLsy2sc1OvSBAoHICO1RuxiZMgEClBNKZmHPOOScLJOlsUFrS5a8UUt64pLNCxxxzTMybNy/7VwpPKYScf/75sXbt2hg5cmQ2/swzz8Sf//zn2H///bPX6axNWtI9Remm63TWJl1223fffbPxFHzuueeeWLBgQXzsYx/LxtKZpXQmaO7cufH1r389G3vttdfiM5/5THz5y1/OXqdA9MILL8RFF12UBbY0mM5K3XnnnVmoSjd5WwgQqKaAAFTNvpk1gcoIpEtO6WxPuuk5BaB0WWnx4sVx+eWXx9KlS7ep49JLL+15nc7QPPLII/HXv/41G0uXsrYGoD322KMn/PS84fU/zj333OxsU9rXAQcc0POvFKxGjBiRBZ4//vGPPePpk2p33XVXz+v0R7r0tXU58MADszNIKaydeuqpcdxxx2WX7fIu3W19j98ECFRDwCWwavTJLAlUWiCdyUmhJC033XRTdolr69mZ3oWlszzpPp0999wzdt111+xy2J/+9Kdsld6X0Pbee+/eb+v5+9Zbb83u37nssst6xtIf6bJZusR1+OGHZzdep5uv008KP+l/vZfe295ll11i0aJF2VmoFK7GjRsXhxxySDbW+z3+JkCgegICUPV6ZsYEKieQLoOlMznpjE66z6fVGZRPf/rT8ZOf/CS7sfnBBx/MLj+l+27euKSP1+ct119/fXzve9+L22+/Pa666qqeVdKZo3S/0csvv5zdDJ1uiN76s3z58p710h9v3Ha6Ifvhhx/OLrmle4o2btyYXUb7+9//vs37vCBAoFoCAlC1+mW2BCopkC4lpbMn6cbl2267LTcApWCRbjA+88wzs59DDz00+3LDZcuWZTXnfZfQGzHSftK9PemMU7rv6Pnnn89WOeigg7IzPSnspBua08/gwYOz/aSbrVst6b6hqVOnZjdKp/uN0lmgVEO6V+iBBx5o9TbjBAhUQEAAqkCTTJFAHQRSKPnWt74V++23X7z3ve/drqSddtopuyz1m9/8JtK3RKd7fn784x/H1vuC/vGPf2z3nlYD6T2bNm2Ks846K1sl3b8zatSoLPCk7af7iy644ILs02Tpo++tlnS5K91QncJUulS2cuXKuPrqq7OzRBMnTmz1NuMECFRAQACqQJNMkUAdBNJlsBRiWl3+SjVeeOGFWXBJ3x+UAkv6uHr6hFe6LJU+1t7XJb3/a1/7WqRLYr/+9a+z7xRK20n7nzJlSnYzdPqG6nQj9pt9GePQoUOzS2qPPfZYFtzSvUnpI/zp02S77757X6djPQIESigw4PUbC///l3OUcIKmRIBA8wTSGaB0mSp9F89/eknfTL1hw4ZInyTrz7J+/frsvqH0MXgLAQLVFxCAqt9DFRAgQIAAAQL9FHAJrJ9gVidAgAABAgSqLyAAVb+HKiBAgAABAgT6KSAA9RPM6gQIECBAgED1BQSg6vdQBQQIECBAgEA/BQSgfoJZnQABAgQIEKi+gABU/R6qgAABAgQIEOingADUTzCrEyBAgAABAtUXEICq30MVECBAgAABAv0UEID6CWZ1AgQIECBAoPoCAlD1e6gCAgQIECBAoJ8CAlA/waxOgAABAgQIVF9AAKp+D1VAgAABAgQI9FNAAOonmNUJECBAgACB6gsIQNXvoQoIECBAgACBfgoIQP0EszoBAgQIECBQfQEBqPo9VAEBAgQIECDQTwEBqJ9gVidAgAABAgSqLyAAVb+HKiBAgAABAgT6KSAA9RPM6gQIECBAgED1BQSg6vdQBQQIECBAgEA/BQSgfoJZnQABAgQIEKi+gABU/R6qgAABAgQIEOinwP8DW3HeHy+f8SkAAAAASUVORK5CYII=" style="display: block; margin: auto;" /></p>
+<p>The package <code>diemr</code> incorporates the diagnostic index
+expectation maximisation algorithm used to estimate which genomic
+alleles belong to which side of a barrier to geneflow. To start using
+<code>diemr</code>, load the package or install it from CRAN if it is
+not yet available:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Attempt to load a package, if the package was not available, install and load</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;diemr&quot;</span>, <span class="at">character.only =</span> <span class="cn">TRUE</span>)){</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">install.packages</span>(<span class="st">&quot;diemr&quot;</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">&quot;diemr&quot;</span>, <span class="at">character.only =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Next, assemble paths to all files containing the data to be used by
+<code>diemr</code>. Here, we will use a tiny example dataset that is
+included in the package for illustrating the analysis workflow. A good
+practice is to check that all files contain data in the correct format
+for all individuals and markers. Additionally, the analysis will need a
+list with ploidies for all genomic compartments and individuals, and a
+vector with indices of samples that will be included in the
+analysis.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>filepaths <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;data6x3.txt&quot;</span>, <span class="at">package =</span> <span class="st">&quot;diemr&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming diploid markers of all individuals</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>ploidies <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">rep</span>(<span class="dv">2</span>, <span class="dv">6</span>))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Analysing all individuals</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">CheckDiemFormat</span>(<span class="at">files =</span> filepaths, </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">ChosenInds =</span> samples,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">ploidy =</span> ploidies)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># File check passed: TRUE</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Ploidy check passed: TRUE</span></span></code></pre></div>
+<p>If the <code>CheckDiemFormat()</code> function fails, work through
+the error messages and fix the stored input files accordingly. The
+algorithm repeatedly accesses data from the harddisk, so seeing the
+passed file and variable check prior to the analysis is critical.</p>
+<p>To estimate the marker polarities, their diagnostic indices and
+support, run the function <code>diem()</code> with default settings.
+Here, we have only one file with data, so paralelisation is unnecessary,
+and we set <code>nCores = 1</code>. <strong>This setting must always be
+used on Windows</strong>. Other operating systems can process multiple
+genomic compartments (e.g.  chromosomes) in parallel, and the analysis
+of different genomic compartment files can run on multiple
+processors.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">diem</span>(<span class="at">files =</span> filepaths, </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">ploidy =</span> ploidies, </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">markerPolarity =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>)),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">ChosenInds =</span> samples, </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">nCores =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p>The result is a list, where the element <code>res$DI</code> contains
+a table with marker polarities, their diagnostic indices and
+support.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>res<span class="sc">$</span>DI</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   newPolarity         DI   Support Marker</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1       FALSE  -4.872256 15.930181      1</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2        TRUE  -3.520647 18.633399      2</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 3        TRUE -13.274822  6.130625      3</span></span></code></pre></div>
+<p>The column <code>newPolarity</code> means that marker 1 should be
+imported for subsequent analyses as is, and markers 2 and 3 should be
+imported with 0 replaced with 2 and 2 replaced with 0. The marker 3 has
+the lowest diagnostic index and low support, indicating that the
+genotypes scored at this marker are poorly related to the barrier to
+geneflow arbitrated by the data.</p>
+<p>With the marker polarities optimised to detect a barrier to geneflow,
+a plot of the polarised genome will show how genomic regions cross the
+barrier. First, the genotypes need to be imported with optimal marker
+polarities. Second, individual hybrid indices need to be calculated from
+the polarised genotypes. And last, the data will be plotted as a raster
+image.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>genotypes <span class="ot">&lt;-</span> <span class="fu">importPolarized</span>(<span class="at">file =</span> filepaths, </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">changePolarity =</span> res<span class="sc">$</span>markerPolarity, </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">ChosenInds =</span> samples)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                             </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>h <span class="ot">&lt;-</span> <span class="fu">apply</span>(<span class="at">X =</span> res<span class="sc">$</span>I4, </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">MARGIN =</span> <span class="dv">1</span>, </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">FUN =</span> pHetErrOnStateCount)[<span class="dv">1</span>, ]</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>           </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plotPolarized</span>(<span class="at">genotypes =</span> genotypes,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">HI =</span> h)</span></code></pre></div>
+<p><img src="data:image/png;base64,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CBAgQIBA4wQEoMaV3IQJECBAgAABAcg+QIAAAQIECDROQABqXMlNmAABAgQIEBCA7AMECBAgQIBA4wQEoMaV3IQJECBAgAABAcg+QIAAAQIECDROQABqXMlNmAABAgQIEBCA7AMECBAgQIBA4wQEoMaV3IQJECBAgAABAcg+QIAAAQIECDROQABqXMlNmAABAgQIEBCA7AMECBAgQIBA4wQEoMaV3IQJECBAgAABAcg+QIAAAQIECDROQABqXMlNmAABAgQIEBCA7AMECBAgQIBA4wQEoMaV3IQJECBAgAABAcg+QIAAAQIECDROQABqXMlNmAABAgQIEBCA7AMECBAgQIBA4wQEoMaV3IQJECBAgAABAcg+QIAAAQIECDROQABqXMlNmAABAgQIEBCA7AMECBAgQIBA4wQEoMaV3IQJECBAgAABAcg+QIAAAQIECDROQABqXMlNmAABAgQIEBCA7AMECBAgQIBA4wQEoMaV3IQJECBAgAABAcg+QIAAAQIECDROQABqXMlNmAABAgQIEBCA7AMECBAgQIBA4wQEoMaV3IQJECBAgAABAcg+QIAAAQIECDROQABqXMlNmAABAgQIEBCA7AMECBAgQIBA4wQEoMaV3IQJECBAgACBYQjeuMCil15641/2TQIECGQU2GjEiIy965pAfgEB6A3WIIWfcf877Q1+29cIECCQV2DJD6bnHYDeCWQWcAoscwF0T4AAAQIECHRfQADqvrkeCRAgQIAAgcwCAlDmAuieAAECBAgQ6L6AANR9cz0SIECAAAECmQUEoMwF0D0BAgQIECDQfQEBqPvmeiRAgAABAgQyCwhAmQugewIECBAgQKD7AgJQ9831SIAAAQIECGQWEIAyF0D3BAgQIECAQPcFBKDum+uRAAECBAgQyCwgAGUugO4JECBAgACB7gsIQN031yMBAgQIECCQWUAAylwA3RMgQIAAAQLdFxCAum+uRwIECBAgQCCzgACUuQC6J0CAAAECBLovIAB131yPBAgQIECAQGYBAShzAXRPgAABAgQIdF9AAOq+uR4JECBAgACBzAICUOYC6J4AAQIECBDovoAA1H1zPRIgQIAAAQKZBQSgzAXQPQECBAgQINB9AQGo++Z6JECAAAECBDILCECZC6B7AgQIECBAoPsCAlD3zfVIgAABAgQIZBYQgDIXQPcECBAgQIBA9wUEoO6b65EAAQIECBDILCAAZS6A7gkQIECAAIHuCwhA3TfXIwECBAgQIJBZQADKXADdEyBAgAABAt0XEIC6b65HAgQIECBAILOAAJS5ALonQIAAAQIEui8gAHXfXI8ECBAgQIBAZgEBKHMBdE+AAAECBAh0X0AA6r65HgkQIECAAIHMAgJQ5gLongABAgQIEOi+gADUfXM9EiBAgAABApkFBKDMBdA9AQIECBAg0H0BAaj75nokQIAAAQIEMgsIQJkLoHsCBAgQIECg+wICUPfN9UiAAAECBAhkFhCAMhdA9wQIECBAgED3BYZ1v0s9EiBAgEB2gfkbZB+CAfSxwJhvRoz8QtETdASo6PIYHAECBAgQIFCHgABUh6o2CRAgQIAAgaIFBKCiy2NwBAgQIECAQB0CAlAdqtokQIAAAQIEihYQgIouj8ERIECAAAECdQgIQHWoapMAAQIECBAoWkAAKro8BkeAAAECBAjUISAA1aGqTQIECBAgQKBoAQGo6PIYHAECBAgQIFCHgABUh6o2CRAgQIAAgaIFBKCiy2NwBAgQIECAQB0CAlAdqtokQIAAAQIEihYQgIouj8ERIECAAAECdQgIQHWoapMAAQIECBAoWkAAKro8BkeAAAECBAjUISAA1aGqTQIECBAgQKBoAQGo6PIYHAECBAgQIFCHgABUh6o2CRAgQIAAgaIFBKCiy2NwBAgQIECAQB0CAlAdqtokQIAAAQIEihYQgIouj8ERIECAAAECdQgIQHWoapMAAQIECBAoWkAAKro8BkeAAAECBAjUISAA1aGqTQIECBAgQKBoAQGo6PIYHAECBAgQIFCHgABUh6o2CRAgQIAAgaIFBKCiy2NwBAgQIECAQB0CAlAdqtokQIAAAQIEihYQgIouj8ERIECAAAECdQgIQHWoapMAAQIECBAoWkAAKro8BkeAAAECBAjUISAA1aGqTQIECBAgQKBoAQGo6PIYHAECBAgQIFCHgABUh6o2CRAgQIAAgaIFBKCiy2NwBAgQIECAQB0CAlAdqtokQIAAAQIEihYQgIouj8ERIECAAAECdQgIQHWoapMAAQIECBAoWkAAKro8BkeAAAECBAjUISAA1aGqTQIECBAgQKBoAQGo6PIYHAECBAgQIFCHgABUh6o2CRAgQIAAgaIFhqx8bSl6hKUObsXzEU+8rdTRGVcfCIw+8+g+mIUplCrwP9NLHZlx9YPAhNMPjX1P2afoqTgCVHR5DI4AAQIECBCoQ0AAqkNVmwQIECBAgEDRAgJQ0eUxOAIECBAgQKAOAQGoDlVtEiBAgAABAkULDDoADbxW+umnn47f/e53sWDBgqInZ3AECBAgQIAAgVYCgwpA5557buywww7V9x966KHYfvvtY8KECfG2t70trrrqqlbtWkeAAAECBAgQKFagYwB68MEH44QTTog999wz0lGgM844I4YNGxa33nprTJkyJSZPnlzs5AyMAAECBAgQINBKoGMAuv3222PbbbeNGTNmxJAhQ+Lyyy+Pww8/PHbfffeYNm1aPP7447Fw4cJWbVtHgAABAgQIEChSoGMAeu6552KTTTapBj937tx48sknY//996/ev/LKK9XRoBEjRhQ5OYMiQIAAAQIECLQS6BiAdtlll5gzZ07cdNNNcdZZZ8X6668f++23XyxdujS+9a1vxfvf//4YNWpUq7atI0CAAAECBAgUKTCs06j23nvvOPjgg2OvvfaqPvrDH/4wRo4cGUcddVR1Ouy8887r1ITtBAgQIECAAIGiBDoGoDTamTNnxrx582L06NExduzYagLpAuizzz7b0Z+iymkwBAgQIECAwGAEBhWA0sXPO+644xrtvec971njvTcECBAgQIAAgV4RaBmA7rrrrrj55psHPYfPf/7zg/6sDxIgQIAAAQIEcgu0DEA33nhjdYv7YAcnAA1WyucIECBAgACBEgRa3gX2hS98IdIt7oP9K2EixkCAAAECBAgQGKxAywA02C+nzy1atOj1fNxnCRAgQIAAAQLZBVqeAvvXUV177bVxzjnnxLPPPhuvvvpqtTn9+9JLL0V6VEY6UmQhQIAAAQIECPSKQMcjQPPnz49DDjmkevbXOuusE+nXoDfbbLNYvHhx3HvvvfGd73ynV+ZqnAQIECBAgACBSqDjEaDZs2fHihUrIj0FPh31SY/FuPjii2ODDTaIY489Nh5++GGUBAgQIECAAIGeEuh4BGjBggXV4y423HDD6ocQN99880gPSE2/DfSVr3wlzj///Fi+fHlPTdpgCRAgQIAAgWYLdAxAW2+9dTzyyCOrld71rnfFLbfcUr3faKONqn/TE+EtBAgQIECAAIFeEegYgHbffffqep9JkyZVd3yl9+kUWLoW6Lvf/W51SmzcuHG9Ml/jJECAAAECBAhExwCULni+4IIL4qqrroqFCxdW1/2ka4LSU+K/9rWvxTHHHFOdDmNJgAABAgQIEOgVgY4XQaeJTJw4MQ499NAYOnRo9XfnnXfGNddcE+l5YNtss02vzNU4CRAgQIAAAQKVQMcA9Oc//7njYzHSozMsBAgQIECAAIFeEegYgIYPHx7pzq+By9KlS+P++++PdPHziSeeOHCT1wQIECBAgACB4gU6BqDx48fHz3/+87UmsnLlyvjc5z4Xjz322FrbrCBAgAABAgQIlCzQ8SLodoNPvwN00kknxaxZs+KFF15o9zHrCRAgQIAAAQLFCbzhAJRm8tRTT1W/Dr1kyZLiJmZABAgQIECAAIF2Ah1PgT366KNx2WWXrfH99EiM559/vvoV6PTDiFtuueUa270hQIAAAQIECJQs0DEAzZs3L04++eS15pCeBbbrrrvGD37wg7W2WUGAAAECBAgQKFmgYwA66KCD4pVXXil5DsZGgAABAgQIEHhdAv/RNUCvqycfJkCAAAECBAgUItDyCNDMmTNjxowZgx7i9ddfP+jP+iABAgQIECBAILdAyyNAI0aMiE033XT13zPPPBM33HBDpN/+2X777WP06NExZ86cat3YsWNzz0H/BAgQIECAAIHXJdDyCNDBBx8c6S8tCxYsiJ122ikuueSSOPLII1c3vnz58pgyZUqki6QtBAgQIECAAIFeEmgZgAZO4Oqrr46NN944jjjiiIGrY5111olTTz01xo0bVz0lPj013kKAAAECBAgQ6AWBlqfABg581KhR8eSTT8bixYsHrq5epwelrr/++tUpsbU2WkGAAAECBAgQKFSgYwDab7/9ql97Pvroo+Oee+6Jl19+ORYtWhRXXHFFTJ06tTpVlkKQhQABAgQIECDQKwIdT4GNHDkyZs+eHYcddljsvPPOa8xr4sSJcdFFF62xzhsCBAgQIECAQOkCHQNQmkB6IvwDDzxQHQGaO3dujBkzJnbbbbfYaqutSp9fbeN7cdF6MXWro2trX8MEljx2AQQCtQmMDv9/1Yar4XjHeyL2LdxhUAEozWH48OFV6EnBx0KAAAECBAgQ6GWBlgHojjvuiPTjhpMnT64ufp41a9a/neO0adP+7XYbCRAgQIAAAQIlCbQNQKeffnp13U96Gnx6/e8WAejf6dhGgAABAgQIlCbQMgAdf/zxkf7Skn75Od31ZSFAgAABAgQI9ItAx9vgb7vttjjttNPioYce6pc5mwcBAgQIECDQcIGOASj94vN5550X73jHO2KvvfaKn/70p/Hiiy82nM30CRAgQIAAgV4W6BiA0l1fTzzxRFx55ZWxxRZbxHHHHRfpsRdHHXVU3Hzzzb08d2MnQIAAAQIEGirQMQAll6FDh8aBBx4YP/vZz+Kpp56K6dOnV4/H2GeffaojQw21M20CBAgQIECgRwUGFYAGzi09BX7ZsmXV4zFWrlxZ/T7QwO1eEyBAgAABAgRKFxhUAErP/7r00ktjwoQJsfnmm0e67X277baLW265Je69997S52h8BAgQIECAAIE1BFreBj/wE+mJ7wcccEAsXbo00imvCy+8MA4//PBYb731Bn7MawIECBAgQIBAzwh0DEBpJl/84hdj0qRJjX72V89U1EAJECBAgACBjgItA9DAR2Fssskmse6661YXQLdrzS9Bt5OxngABAgQIEChRoG0A8iiMEstlTAQIECBAgMB/Q6BlAPIojP8GrTYIECBAgACBUgUGdRdYqYM3LgIECBAgQIDAGxFoeQRo5syZMWPGjEG3d/311w/6sz5IgAABAgQIEMgt0PII0IgRI2LTTTdd/ffMM8/EDTfcEOmHD9PT4UePHh1z5syp1o0dOzb3HPRPgAABAgQIEHhdAi2PAB188MGR/tKyYMGC2GmnneKSSy6JI488cnXj6Rehp0yZEvPmzVu9zgsCBAgQIECAQC8ItAxAAwd+9dVXx8YbbxxHHHHEwNWRnhJ/6qmnxrhx42LhwoXVA1LX+IA3BAgQIECAAIFCBVqeAhs41lGjRlUPPl28ePHA1dXr9CvR66+/fnVKbK2NVhAgQIAAAQIEChXoGID222+/6sGnRx99dNxzzz2Rngu2aNGiuOKKK2Lq1KnVqbIUgiwECBAgQIAAgV4R6HgKbOTIkTF79uw47LDDYuedd15jXhMnToyLLrpojXXeECBAgAABAgRKF+gYgNIExo8fHw888EB1BGju3LkxZsyY2G233TwbrPTqGh8BAgQIECDQUmBQASh9c/jw4VXoScHHQoAAAQIECBDoZYFBBaBbb701zj777Hj88cdj2bJla803/SaQhQABAgQIECDQKwIdA9D8+fPjgAMOqO702n333SPdFWYhQIAAAQIE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0Z6By9NPPx1/+tOf4mMf+9jA1dXr9NkUnN785jfHZpttFgceeGD87W9/W/25r371q3HaaafFKaecEm9961tj6tSpq7etevHSSy/FYYcdVrWfXqflhRdeiOOOOy7GjRsXG2+8cUyYMCH+8Y9/rPpKzJ49O/bYY4/44x//GGPHjo0999wznn/++bjjjjuq1yNHjoytt966OqWX1lsIEOhtAQGot+tn9ASKFzj88MPjt7/9baxcuXL1WH/zm99EukYoBYqBSzoqlELRLrvsEhdccEEce+yx8de//nWNoPToo49W2375y1/GAQccEJtsssnAJmL58uXV5//yl7/EGWecESNGjKj63meffeJXv/pVfPrTn47zzz+/OjL13ve+two5qYElS5ZUYeezn/1sfOQjH6kC2PDhw+Oggw6KDTfcMC688MI46aSTqoB05JFHrtGnNwQI9J7AsN4bshETINBLAikAnXzyyXHbbbdVR1jS2FPQ+fjHP77WNG699dY45JBD4pxzzqm2paM46667bnzpS1+KxYsXx5gxY6r1CxYsiPvvvz/e+c53Vu/TRdBpSdcUfepTn4q77rorbrrppthmm22q9SkspSM5v//976sjSmnlqvB05plnxre//e3qc6+++mqkAJT6S0v6znPPPRff/OY3q8CW1m2xxRZxyy23VKEqXeRtIUCgNwUEoN6sm1ET6BmBFEJ23XXXSEd90immFCjSNUEzZsyIOXPmrDGP733ve6vfP/nkk3HffffFvHnzqnXpVNaqAJROja0KP6u/8NqLE088Ma688srqiNP222+/etPNN98co0ePjnQaK4WsVUs60jTwfVqfTn2tWnbcccfq6E8KcZ/5zGeqcJZCWfqzECDQ2wJOgfV2/YyeQE8IpACx6jqgFITe/e53x7bbbrvW2FM4Ouqoo6rTT+n6oUmv3UL/4IMPVp8beAotXaPTaknX8bz97W+P73//+2ucckunzdIprg9/+MPxwQ9+cPVfCj8DrwNKbQ5se4MNNojrrruuumboy1/+cuy8885V8LrssstadW8dAQI9JCAA9VCxDJVArwqk63rSb/Tcfffd1XU4EydObDmVdG3NFVdcEaeffnr8/e9/jyeeeCKmTJlSfXZgAEq317daZs6cGeedd151+usnP/nJ6o+85S1vqYJROsWVTpMN/PvX3w7617bf9773RbqeKIWoH/3oR5GuC0pHgB555JHV7XtBgEDvCQhAvVczIybQcwI77LBDpFNSl1xySVx//fUtr/9ZtmxZXHvttXH88cfH5MmTY7vttqvmeeedd1b/pvDSaUnf+ehHPxqf+MQnquuOnnrqqeor6VRWOtJz++23Vz+YmK7dSYHqiCOOiHQNULslXeuz1157xbPPPlsFqBTGLr744ipAzZ07t93XrCdAoAcEBKAeKJIhEugHgXQUaPr06VUQanX9TrrYOd0yn44ApbCydOnS6m6tdNQlLatuZx+MRToFln58MV0TlJZjjjkm0lGgFGDS6at0fdG0adNi1qxZse+++7ZtMt2pli62PuGEE6p/01Ggc889N4YNG7b6gu62X7aBAIGiBQSgostjcAT6RyBdB5SO8rS6+2vVLL/+9a9XL9Pt8SmwpKMt6W6udFoqHb0Z7JLu1PrGN74Rv/jFL+IPf/hDdfF0OrqUlkMPPbS6zidd25PuNkshp92SbqH/8Y9/XAWynXbaqbpt/6qrrqra/Nfb79u1YT0BAmUKDHntMPD//zhHmWM0KgIEGiaQnhOWwseoUaP+6zNPt9O//PLL1Y8svp7G0xGpF198MTbffPPX8zWfJUCgUAEBqNDCGBYBAgQIECBQn4BTYPXZapkAAQIECBAoVEAAKrQwhkWAAAECBAjUJyAA1WerZQIECBAgQKBQAQGo0MIYFgECBAgQIFCfgABUn62WCRAgQIAAgUIFBKBCC2NYBAgQIECAQH0CAlB9tlomQIAAAQIEChUQgAotjGERIECAAAEC9QkIQPXZapkAAQIECBAoVEAAKrQwhkWAAAECBAjUJyAA1WerZQIECBAgQKBQAQGo0MIYFgECBAgQIFCfgABUn62WCRAgQIAAgUIFBKBCC2NYBAgQIECAQH0CAlB9tlomQIAAAQIEChUQgAotjGERIECAAAEC9QkIQPXZapkAAQIECBAoVEAAKrQwhkWAAAECBAjUJyAA1WerZQIECBAgQKBQAQGo0MIYFgECBAgQIFCfgABUn62WCRAgQIAAgUIFBKBCC2NYBAgQIECAQH0C/wfPvd4g52t6YAAAAABJRU5ErkJggg==" style="display: block; margin: auto;" /></p>
 </div>
 <div id="input-data" class="section level1">
 <h1>Input data</h1>
-<p>The <code>diemr</code> package uses a consise genome representation. Let’s have a small dataset of three markers genotyped for six individuals.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">S001122</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">S121000</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">S02221U</a></code></pre></div>
-<p>The genotypes encoded as <code>0</code> represent homozygots for an allele attributed to barrier side A, <code>1</code> are heterozygous genotypes, <code>2</code> are homozygots for another allele, attributed to barrier side B, and <code>U</code> (symbol &quot;_&quot; is also allowed) represents an unknown state or a third (fourth) allele. The power of <code>diemr</code> lies in the safety that the user does not need to determine the true assignment to the barrier sides A and B before the analysis and the specific genotypes encoded as <code>0</code> and <code>2</code> respectively can be arbitrary.</p>
-<p>The leading <code>S</code> on each line of the input file is needed to ensure that the marker genotypes are read in as a string on all operating systems. The <code>S</code> is dropped during import of the genotypes, and the dataset is imported as a character matrix of all markers.</p>
+<p>The <code>diemr</code> package uses a consise genome representation.
+Let’s have a small dataset of three markers genotyped for six
+individuals.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>S001122</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>S121000</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>S02221U</span></code></pre></div>
+<p>The genotypes encoded as <code>0</code> represent homozygots for an
+allele attributed to barrier side A, <code>1</code> are heterozygous
+genotypes, <code>2</code> are homozygots for another allele, attributed
+to barrier side B, and <code>U</code> (symbol “_” is also allowed)
+represents an unknown state or a third (fourth) allele. The power of
+<code>diem</code> lies in the safety that the user does not need to
+determine the true assignment to the barrier sides A and B before the
+analysis and the specific genotypes encoded as <code>0</code> and
+<code>2</code> respectively can be arbitrary.</p>
+<p>The leading <code>S</code> on each line of the input file is needed
+to ensure that the marker genotypes are read in as a string on all
+operating systems. The <code>S</code> is dropped during import of the
+genotypes, and the dataset is imported as a character matrix of all
+markers.</p>
 </div>
 <div id="multiple-compartments-with-different-ploidies" class="section level1">
 <h1>Multiple compartments with different ploidies</h1>
-<p>Some genomic compartments differ between individuals in their ploidy. For example, markers located on chromosome X in mammals will be diploid in females, but haploid in males. Ploidy differences between individuals influence calculation of the hybrid index, which in turn has an effect on the diem analysis.</p>
-<p>To set up the diem analysis with multiple compartments, the markers with different individual ploidies must be stored in separate files. The file analysed in the <strong>Quick start</strong> chapter could contain markers from autosomes and an additional file will contain markers from an X chromosome, with individuals 2 and 6 being males. The respective ploidies for the second genomic compartment will be <code>c(2, 1, 2, 2, 2, 1)</code>.</p>
-<p>Arguments <code>files</code> and <code>ploidy</code> will need to reflect the information, taking care that the order of filenames corresponds to the order of elements in the list of ploidies. <code>diem</code> cannot check that the order of the elements is correct, only that the information is in the correct format.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">filepaths2 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;data6x3.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;diemr&quot;</span>),</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">                <span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;data7x10.txt&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;diemr&quot;</span>))</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">               </a>
-<a class="sourceLine" id="cb7-4" data-line-number="4">ploidies2 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">rep</span>(<span class="dv">2</span>, <span class="dv">6</span>),</a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">                  <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb7-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="kw">CheckDiemFormat</span>(<span class="dt">files =</span> filepaths2, </a>
-<a class="sourceLine" id="cb7-8" data-line-number="8">                <span class="dt">ChosenInds =</span> samples,</a>
-<a class="sourceLine" id="cb7-9" data-line-number="9">                <span class="dt">ploidy =</span> ploidies2)</a>
-<a class="sourceLine" id="cb7-10" data-line-number="10"><span class="co"># File check passed: TRUE</span></a>
-<a class="sourceLine" id="cb7-11" data-line-number="11"><span class="co"># Ploidy check passed: TRUE</span></a>
-<a class="sourceLine" id="cb7-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb7-13" data-line-number="13"><span class="co"># Set random seed for repeatibility (optional)</span></a>
-<a class="sourceLine" id="cb7-14" data-line-number="14"><span class="kw">set.seed</span>(<span class="dv">39583782</span>)</a>
-<a class="sourceLine" id="cb7-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb7-16" data-line-number="16"><span class="co"># Run diem with verbose = TRUE to store hybrid indices with ploidy-aware allele counts</span></a>
-<a class="sourceLine" id="cb7-17" data-line-number="17">res2 &lt;-<span class="st"> </span><span class="kw">diem</span>(<span class="dt">files =</span> filepaths2, </a>
-<a class="sourceLine" id="cb7-18" data-line-number="18">             <span class="dt">ploidy =</span> ploidies2, </a>
-<a class="sourceLine" id="cb7-19" data-line-number="19">             <span class="dt">markerPolarity =</span> <span class="ot">FALSE</span>,</a>
-<a class="sourceLine" id="cb7-20" data-line-number="20">             <span class="dt">ChosenInds =</span> samples, </a>
-<a class="sourceLine" id="cb7-21" data-line-number="21">             <span class="dt">nCores =</span> <span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb7-22" data-line-number="22">             <span class="dt">verbose =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<p>Plotting polarised genomes from multiple compartments requires separate import of the compartment data. The polarities in the <code>res2$markerPolarity</code> element are combined across all compartments, and extracting them requires knowledge of the number of markers in each compartment. Alternatively, the marker polarities from each compartment can be extracted from the list in the <code>res2$PolarityChanges</code> element.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co"># Import each compartment into a list</span></a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">genotypes2 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">importPolarized</span>(<span class="dt">file =</span> filepaths2[<span class="dv">1</span>], </a>
-<a class="sourceLine" id="cb8-3" data-line-number="3">                       <span class="dt">changePolarity =</span> res2<span class="op">$</span>markerPolarity[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>], </a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">                       <span class="dt">ChosenInds =</span> samples),</a>
-<a class="sourceLine" id="cb8-5" data-line-number="5">                  <span class="kw">importPolarized</span>(<span class="dt">file =</span> filepaths2[<span class="dv">2</span>], </a>
-<a class="sourceLine" id="cb8-6" data-line-number="6">                       <span class="dt">changePolarity =</span> res2<span class="op">$</span>markerPolarity[<span class="dv">4</span><span class="op">:</span><span class="dv">13</span>], </a>
-<a class="sourceLine" id="cb8-7" data-line-number="7">                       <span class="dt">ChosenInds =</span> samples)) </a>
-<a class="sourceLine" id="cb8-8" data-line-number="8">                       </a>
-<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="co"># Bind compartment genotypes into one matrix</span></a>
-<a class="sourceLine" id="cb8-10" data-line-number="10">genotypes2 &lt;-<span class="st"> </span><span class="kw">Reduce</span>(cbind, genotypes2)</a>
-<a class="sourceLine" id="cb8-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb8-12" data-line-number="12"><span class="co"># Load individual hybrid indices from a stored file</span></a>
-<a class="sourceLine" id="cb8-13" data-line-number="13">h2 &lt;-<span class="st"> </span><span class="kw">unlist</span>(<span class="kw">read.table</span>(<span class="st">&quot;diagnostics/HIwithOptimalPolarities.txt&quot;</span>))</a>
-<a class="sourceLine" id="cb8-14" data-line-number="14"></a>
-<a class="sourceLine" id="cb8-15" data-line-number="15"><span class="co"># Plot the polarised genotypes</span></a>
-<a class="sourceLine" id="cb8-16" data-line-number="16"><span class="kw">plotPolarized</span>(<span class="dt">genotypes =</span> genotypes2,</a>
-<a class="sourceLine" id="cb8-17" data-line-number="17">              <span class="dt">HI =</span> h2)</a></code></pre></div>
-<p><img src="data:image/png;base64,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2Tto/AQIECBAgEBuAQEoN5kdCBAgQIAAgbILCEBl76DxEyBAgAABArkFBKDcZHYgQIAAAQIEyi4gAJW9g8ZPgAABAgQI5BYQgHKT2YEAAQIECBAou0CXXbunshdh/AQIECBAgACBPALOAOXRsi0BAgQIECCQhIAAlEQbFUGAAAECBAjkERCA8mjZlgABAgQIEEhCQABKoo2KIECAAAECBPIICEB5tGxLgAABAgQIJCEgACXRRkUQIECAAAECeQQEoDxatiVAgAABAgSSEBCAkmijIggQIECAAIE8AgJQHi3bEiBAgAABAkkICEBJtFERBAgQIECAQB4BASiPlm0JECBAgACBJAQEoCTaqAgCBAgQIEAgj4AAlEfLtgQIECBAgEASAgJQEm1UBAECBAgQIJBHQADKo2VbAgQIECBAIAkBASiJNiqCAAECBAgQyCMgAOXRsi0BAgQIECCQhIAAlEQbFUGAAAECBAjkERCA8mjZlgABAgQIEEhCQABKoo2KIECAAAECBPIICEB5tGxLgAABAgQIJCEgACXRRkUQIECAAAECeQQEoDxatiVAgAABAgSSEBCAkmijIggQIECAAIE8AgJQHi3bEiBAgAABAkkICEBJtFERBAgQIECAQB4BASiPlm0JECBAgACBJAQEoCTaqAgCBAgQIEAgj4AAlEfLtgQIECBAgEASAgJQEm1UBAECBAgQIJBHQADKo2VbAgQIECBAIAkBASiJNiqCAAECBAgQyCMgAOXRsi0BAgQIECCQhIAAlEQbFUGAAAECBAjkERCA8mjZlgABAgQIEEhCQABKoo2KIECAAAECBPIICEB5tGxLgAABAgQIJCEgACXRRkUQIECAAAECeQQEoDxatiVAgAABAgSSEBCAkmijIggQIECAAIE8AgJQHi3bEiBAgAABAkkICEBJtFERBAgQIECAQB4BASiPlm0JECBAgACBJAQEoCTaqAgCBAgQIEAgj4AAlEfLtgQIECBAgEASAgJQEm1UBAECBAgQIJBHQADKo2VbAgQIECBAIAkBASiJNiqCAAECBAgQyCMgAOXRsi0BAgQIECCQhIAAlEQbFUGAAAECBAjkERCA8mjZlgABAgQIEEhCQABKoo2KIECAAAECBPIICEB5tGxLgAABAgQIJCEgACXRRkUQIECAAAECeQQEoDxatiVAgAABAgSSEBCA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" style="display: block; margin: auto;" /></p>
+<p>Some genomic compartments differ between individuals in their ploidy.
+For example, markers located on chromosome X in mammals will be diploid
+in females, but haploid in males. Ploidy differences between individuals
+influence calculation of the hybrid index, which in turn has an effect
+on the <em>diem</em> analysis.</p>
+<p>To set up the <em>diem</em> analysis with multiple compartments, the
+markers with different individual ploidies must be stored in separate
+files. The file analysed in the <strong>Quick start</strong> chapter
+could contain markers from autosomes and an additional file will contain
+markers from an X chromosome, with individuals 2 and 6 being males. The
+respective ploidies for the second genomic compartment will be
+<code>c(2, 1, 2, 2, 2, 1)</code>.</p>
+<p>Arguments <code>files</code> and <code>ploidy</code> will need to
+reflect the information, taking care that the order of filenames
+corresponds to the order of elements in the list of ploidies.
+<code>diem</code> cannot check that the order of the elements is
+correct, only that the information is in the correct format.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>filepaths2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;data6x3.txt&quot;</span>, <span class="at">package =</span> <span class="st">&quot;diemr&quot;</span>),</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;data7x10.txt&quot;</span>, <span class="at">package =</span> <span class="st">&quot;diemr&quot;</span>))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>               </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>ploidies2 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">rep</span>(<span class="dv">2</span>, <span class="dv">6</span>),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">CheckDiemFormat</span>(<span class="at">files =</span> filepaths2, </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">ChosenInds =</span> samples,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                <span class="at">ploidy =</span> ploidies2)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># File check passed: TRUE</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Ploidy check passed: TRUE</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Set random seed for repeatibility of null polarities (optional)</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">39583782</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Run diem with verbose = TRUE to store hybrid indices with ploidy-aware allele counts</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>res2 <span class="ot">&lt;-</span> <span class="fu">diem</span>(<span class="at">files =</span> filepaths2, </span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>             <span class="at">ploidy =</span> ploidies2, </span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">markerPolarity =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">ChosenInds =</span> samples, </span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>             <span class="at">nCores =</span> <span class="dv">1</span>,</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>             <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>Plotting polarised genomes from multiple compartments requires
+separate import of the compartment data. The polarities in the
+<code>res2$markerPolarity</code> element are combined across all
+compartments, and extracting them requires knowledge of the number of
+markers in each compartment. Alternatively, the marker polarities from
+each compartment can be extracted from the list in the
+<code>res2$PolarityChanges</code> element.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import each compartment into a list</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>genotypes2 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">importPolarized</span>(<span class="at">file =</span> filepaths2[<span class="dv">1</span>], </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">changePolarity =</span> res2<span class="sc">$</span>markerPolarity[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>], </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">ChosenInds =</span> samples),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">importPolarized</span>(<span class="at">file =</span> filepaths2[<span class="dv">2</span>], </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">changePolarity =</span> res2<span class="sc">$</span>markerPolarity[<span class="dv">4</span><span class="sc">:</span><span class="dv">13</span>], </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">ChosenInds =</span> samples)) </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                       </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Bind compartment genotypes into one matrix</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>genotypes2 <span class="ot">&lt;-</span> <span class="fu">Reduce</span>(cbind, genotypes2)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Load individual hybrid indices from a stored file</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>h2 <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">read.table</span>(<span class="st">&quot;diagnostics/HIwithOptimalPolarities.txt&quot;</span>))</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the polarised genotypes</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="fu">plotPolarized</span>(<span class="at">genotypes =</span> genotypes2,</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>              <span class="at">HI =</span> h2)</span></code></pre></div>
+<p><img src="data:image/png;base64,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gAABAgQItE5AAGpdyxVMgAABAgQICED2AQIECBAgQKB1AgJQ61quYAIECBAgQEAAsg8QIECAAAECrRMQgFrXcgUTIECAAAECApB9gAABAgQIEGidgADUupYrmAABAgQIEBCA7AMECBAgQIBA6wQEoNa1XMEECBAgQICAAGQfIECAAAECBFonIAC1ruUKJkCAAAECBAQg+wABAgQIECDQOgEBqHUtVzABAgQIECAgANkHCBAgQIAAgdYJCECta7mCCRAgQIAAAQHIPkCAAAECBAi0TkAAal3LFUyAAAECBAgIQPYBAgQIECBAoHUCAlDrWq5gAgQIECBAQACyDxAgQIAAAQKtExCAWtdyBRMgQIAAAQICkH2AAAECBAgQaJ2AANS6liuYAAECBAgQEIDsAwQIECBAgEDrBASg1rVcwQQIECBAgIAAZB8gQIAAAQIEWicgALWu5QomQIAAAQIEBCD7AAECBAgQINA6AQGodS1XMAECBAgQICAA2QcIECBAgACB1gkIQK1ruYIJECBAgAABAcg+QIAAAQIECLROQABqXcsVTIAAAQIECAhA9gECBAgQIECgdQICUOtarmACBAgQIEBAALIPECBAgAABAq0TEIBa13IFEyBAgAABAkMQvHmBhS+88ObfXPA71x0+PJvqcuoRl2x2i56ZyLrDXsxmrgtfHJbNXHKaSE7/XSeXXP7mrbXGGjHs9Z+cl0FLX19ynmCuc0s72dj/mZzr9FbrvBafPWW1br/vxkcfd2zfh6v1dy6rlb8nN774hOnZzHv0GROymUtOE8npv+vkksvfvG8dcGAct8ceObWqNhenwGokBggQIECAAIHSBQSg0jusPgIECBAgQKAmIADVSAwQIECAAAECpQsIQKV3WH0ECBAgQIBATUAAqpEYIECAAAECBEoXEIBK77D6CBAgQIAAgZqAAFQjMUCAAAECBAiULiAAld5h9REgQIAAAQI1AQGoRmKAAAECBAgQKF1AACq9w+ojQIAAAQIEagICUI3EAAECBAgQIFC6gABUeofVR4AAAQIECNQEBKAaiQECBAgQIECgdAEBqPQOq48AAQIECBCoCQhANRIDBAgQIECAQOkCAlDpHVYfAQIECBAgUBMQgGokBggQIECAAIHSBQSg0jusPgIECBAgQKAmIADVSAwQIECAAAECpQsIQKV3WH0ECBAgQIBATUAAqpEYIECAAAECBEoXEIBK77D6CBAgQIAAgZqAAFQjMUCAAAECBAiULiAAld5h9REgQIAAAQI1AQGoRmKAAAECBAgQKF1AACq9w+ojQIAAAQIEagICUI3EAAECBAgQIFC6gABUeofVR4AAAQIECNQEBKAaiQECBAgQIECgdAEBqPQOq48AAQIECBCoCQhANRIDBAgQIECAQOkCAlDpHVYfAQIECBAgUBMQgGokBggQIECAAIHSBQSg0jusPgIECBAgQKAmIADVSAwQIECAAAECpQsIQKV3WH0ECBAgQIBATUAAqpEYIECAAAECBEoXEIBK77D6CBAgQIAAgZqAAFQjMUCAAAECBAiULiAAld5h9REgQIAAAQI1AQGoRmKAAAECBAgQKF1gSOkFDlR96w57MRafMH2gVt/T6500KJ/pL34knx6NPi4jF/tuPs14g5mMPmPCGzzb3acWnz2luxvsla3NG5HZTPPZZzKDqU3HEaAaiQECBAgQIECgdAEBqPQOq48AAQIECBCoCQhANRIDBAgQIECAQOkCAlDpHVYfAQIECBAgUBMQgGokBggQIECAAIHSBQSg0jusPgIECBAgQKAmIADVSAwQIECAAAECpQsIQKV3WH0ECBAgQIBATUAAqpEYIECAAAECBEoXEIBK77D6CBAgQIAAgZqAAFQjMUCAAAECBAiULiAAld5h9REgQIAAAQI1AQGoRmKAAAECBAgQKF1AACq9w+ojQIAAAQIEagICUI3EAAECBAgQIFC6gABUeofVR4AAAQIECNQEBKAaiQECBAgQIECgdAEBqPQOq48AAQIECBCoCQhANRIDBAgQIECAQOkCAlDpHVYfAQIECBAgUBMQgGokBggQIECAAIHSBQSg0jusPgIECBAgQKAmIADVSAwQIECAAAECpQsIQKV3WH0ECBAgQIBATUAAqpEYIECAAAECBEoXEIBK77D6CBAgQIAAgZqAAFQjMUCAAAECBAiULiAAld5h9REgQIAAAQI1AQGoRmKAAAECBAgQKF1AACq9w+ojQIAAAQIEagICUI3EAAECBAgQIFC6gABUeofVR4AAAQIECNQEBKAaiQECBAgQIECgdAEBqPQOq48AAQIECBCoCQhANRIDBAgQIECAQOkCAlDpHVYfAQIECBAgUBMQgGokBggQIECAAIHSBQSg0jusPgIECBAgQKAmIADVSAwQIECAAAECpQsIQKV3WH0ECBAgQIBATUAAqpEYIECAAAECBEoXEIBK77D6CBAgQIAAgZrAkNqIgX4JPL9wWJy82YR+vbYbL5r6yPRubKZf2/jfY/v1sq68aGpXttJ7Gxl9Rj77bu/pdW/Gn53SvW113NLZHV/RvRfMG9G9bXXY0qSM/j+QpvrZDvPt1tPbbvL6lvbo1tbe3HYcAXpzbt5FgAABAgQI9LCAANTDzTN1AgQIECBA4M0JCEBvzs27CBAgQIAAgR4WEIB6uHmmToAAAQIECLw5gX4HoKVLly7fwpNPPhm///3vY/78+cvH/EKAAAECBAgQ6BWBfgWgc889N7bZZpuqpgceeCC23nrrOOigg2LTTTeNK6+8sldqNU8CBAgQIECAQCXQMQDdf//9cdxxx8Wuu+4a6SjQ6aefHkOGDIlbbrklJk6cGEceeSRKAgQIECBAgEBPCXQMQLfddltsueWWMW3atBg0aFBcdtllccghh8TOO+8ckydPjkcffTQWLFjQU0WbLAECBAgQINBugY4B6Jlnnon111+/UpozZ048/vjjsffee1ePX3rppepo0PDhw9utqHoCBAgQIECgpwQ6BqDtt98+Zs+eHTfeeGOceeaZsdZaa8Vee+0VS5Ysie9+97vxoQ99KEaNGtVTRZssAQIECBAg0G6BjrfC2H333WP//feP3XbbrZL68Y9/HCNHjowjjjiiOh123nnntVtQ9QQIECBAgEDPCXQMQKmiGTNmxNy5c2P06NExZsyYqsh0AfRZZ53l6E/PtdyECRAgQIAAgX4FoHTx87bbbruC1vvf//4VHntAgAABAgQIEOgVgcYAdOedd8ZNN93U7xqOPTaj23/3e9ZeSIAAAQIECLRVoDEA3XDDDdVH3PuLIgD1V8rrCBAgQIAAgRwEGj8F9uUvfznSR9z7+5NDIeZAgAABAgQIEOivQGMA6u+b0+sWLly4Ki/3WgIECBAgQIDAahdoPAX2n7O65ppr4pxzzomnn346Xn311erp9O8LL7wQ6VYZ6UiRhQABAgQIECDQKwIdjwDNmzcvDjjggOreX2ussUakb4PecMMNY9GiRXHPPffE97///V6p1TwJECBAgAABApVAxyNAs2bNitdeey3SXeDTUZ90W4yLLrooRowYEUcffXQ8+OCDKAkQIECAAAECPSXQ8QjQ/Pnzq9tdrL322tUXIW600UaRbpCavhvo61//epx//vnxyiuv9FTRJkuAAAECBAi0W6BjANp8883joYceWq703ve+N26++ebq8brrrlv9m+4IbyFAgAABAgQI9IpAxwC08847V9f7HH744dUnvtLjdAosXQv0gx/8oDolNnbs2F6p1zwJECBAgAABAtExAKULnqdPnx5XXnllLFiwoLruJ10TlO4S/81vfjOOOuqo6nQYSwIECBAgQIBArwh0vAg6FTJ+/Pg48MADY/DgwdXPHXfcEVdffXWk+4FtscUWvVKreRIgQIAAAQIEKoGOAegvf/lLx9tipFtnWAgQIECAAAECvSLQMQANHTo00ie/+i5LliyJ++67L9LFz8cff3zfp/xOgAABAgQIEMheoGMA2nHHHeMXv/hFrZClS5fGl770pXjkkUdqzxkgQIAAAQIECOQs0PEi6JVNPn0P0AknnBAzZ86M5557bmUvM06AAAECBAgQyE7gTQegVMkTTzxRfTv04sWLsyvMhAgQIECAAAECKxPoeArs4YcfjksvvXSF96dbYjz77LPVt0CnL0bcZJNNVnjeAwIECBAgQIBAzgIdA9DcuXPjxBNPrNWQ7gW2ww47xNlnn117zgABAgQIECBAIGeBjgFov/32i5deeinnGsyNAAECBAgQILBKAv/VNUCrtCUvJkCAAAECBAhkItB4BGjGjBkxbdq0fk/xuuuu6/drvZAAAQIECBAgsLoFGo8ADR8+PDbYYIPlP0899VRcf/31kb77Z+utt47Ro0fH7Nmzq7ExY8as7hpsnwABAgQIECCwSgKNR4D233//SD9pmT9/fmy33XZx8cUXx2GHHbZ85a+88kpMnDgx0kXSFgIECBAgQIBALwk0BqC+BVx11VWx3nrrxaGHHtp3ONZYY4045ZRTYuzYsdVd4tNd4y0ECBAgQIAAgV4QaDwF1nfio0aNiscffzwWLVrUd7j6Pd0oda211qpOidWeNECAAAECBAgQyFSgYwDaa6+9qm97njBhQtx9993x4osvxsKFC+Pyyy+Pk08+uTpVlkKQhQABAgQIECDQKwIdT4GNHDkyZs2aFQcffHCMGzduhbrGjx8fF1544QpjHhAgQIAAAQIEchcY9Ponu5b2Z5LpyxDTEaA5c+bEOuusEzvttFNsttlm/Xlrma957dmI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KFxAACq8wcojQIAAAQIE6gICUN3ECAECBAgQIFC4gABUeIOVR4AAAQIECNQFBKC6iRECBAgQIECgcAEBqPAGK48AAQIECBCoCwhAdRMjBAgQIECAQOECg5a+vhRe48CVR27gbK15YAUGDezqrf0tEvA35i2CHMDV+G9pAHEHdtVDBnb1ha/djl94g5VHYDUL+Buzmhtg8yULOAVWcnfVRoAAAQIECDQKCECNLAYJECBAgACBkgUEoJK7qzYCBAgQIECgUUAAamQxSIAAAQIECJQsIACV3F21ESBAgAABAo0CAlAji0ECBAgQIECgZAEBqOTuqo0AAQIECBBoFBCAGlkMEiBAgAABAiULCEAld1dtBAgQIECAQKOAANTIYpAAAQIECBAoWUAAKrm7aiNAgAABAgQaBQSgRhaDBAgQIECAQMkCAlDJ3VUbAQIECBAg0CggADWyGCRAgAABAgRKFhCASu6u2ggQIECAAIFGAQGokcUgAQIECBAgULKAAFRyd9VGgAABAgQINAoIQI0sBgkQIECAAIGSBQSgkrurNgIECBAgQKBRQABqZDFIgAABAgQIlCwgAJXcXbURIECAAAECjQICUCOLQQIECBAgQKBkAQGo5O6qjQABAgQIEGgUEIAaWQwSIECAAAECJQsIQCV3V20ECBAgQIBAo4AA1MhikAABAgQIEChZQAAqubtqI0CAAAECBBoFBKBGFoMECBAgQIBAyQICUMndVRsBAgQIECDQKCAANbIYJECAAAECBEoWEIBK7q7aCBAgQIAAgUYBAaiRxSABAgQIECBQsoAAVHJ31UaAAAECBAg0CghAjSwGCRAgQIAAgZIFBKCSu6s2AgQIECBAoFFAAGpkMUiAAAECBAiULCAAldxdtREgQIAAAQKNAgJQI4tBAgQIECBAoGQBAajk7qqNAAECBAgQaBQQgBpZDBIgQIAAAQIlCwhAJXdXbQQIECBAgECjgADUyGKQAAECBAgQKFlAACq5u2ojQIAAAQIEGgUEoEYWgwQIECBAgEDJAgJQyd1VGwECBAgQINAoIAA1shgkQIAAAQIEShYQgErurtoIECBAgACBRgEBqJHFIAECBAgQIFCygABUcnfVRoAAAQIECDQKCECNLAYJECBAgACBkgUEoJK7qzYCBAgQIECgUUAAamQxSIAAAQIECJQsIACV3F21ESBA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" style="display: block; margin: auto;" /></p>
 </div>
 <div id="frequently-asked-questions" class="section level1">
 <h1>Frequently asked questions</h1>
 <ol style="list-style-type: decimal">
-<li><strong>How can I install <code>diemr</code> from the source?</strong></li>
+<li><strong>How can I install <code>diemr</code> from the
+source?</strong></li>
 </ol>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">install.packages</span>(<span class="dt">package =</span> <span class="st">&quot;diemr_1.0.tar.gz&quot;</span>,</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">                 <span class="dt">repos =</span> <span class="ot">NULL</span>, <span class="dt">type =</span> <span class="st">&quot;source&quot;</span>)</a></code></pre></div>
-<p>Make sure to set the <code>R</code> working directory to the folder, where the package tarball is stored, or include a full path to the file within the quotes. Update the version number to the specific file.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="at">package =</span> <span class="st">&quot;diemr_1.1.tar.gz&quot;</span>,</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">repos =</span> <span class="cn">NULL</span>, <span class="at">type =</span> <span class="st">&quot;source&quot;</span>)</span></code></pre></div>
+<p>Make sure to set the <code>R</code> working directory to the folder,
+where the package tarball is stored, or include a full path to the file
+within the quotes. Update the version number to the specific file.</p>
 <ol start="2" style="list-style-type: decimal">
-<li><strong>How can I calculate the hybrid indices from my polarised data?</strong></li>
+<li><strong>How can I calculate the hybrid indices from my polarised
+data?</strong></li>
 </ol>
-<p>There are two options. First, use <code>diem</code> with argument <code>verbose = TRUE</code> and the hybrid indices will be stored in a text file in the diagnostics folder in the working directory. The stored values will be ploidy-aware. However, these hybrid indices could include the bias introduced by the small data correction if the data warranted it. The user might prefer to calculate the hybrid indices without the small data correction. For this, use the <code>I4</code> matrix in the <code>diem</code> output.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">apply</span>(res<span class="op">$</span>I4, <span class="dt">MARGIN =</span> <span class="dv">1</span>, <span class="dt">FUN =</span> pHetErrOnStateCount)</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="co">#          [,1] [,2]      [,3]      [,4]      [,5]      [,6]</span></a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="co"># p   0.5000000    0 0.3333333 0.5000000 0.8333333 1.0000000</span></a>
-<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="co"># Het 0.3333333    0 0.6666667 0.3333333 0.3333333 0.0000000</span></a>
-<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="co"># Err 0.0000000    0 0.0000000 0.0000000 0.0000000 0.3333333</span></a></code></pre></div>
+<p>There are two options. First, use <code>diem</code> with argument
+<code>verbose = TRUE</code> and the hybrid indices will be stored in a
+text file in the diagnostics folder in the working directory. The stored
+values will be ploidy-aware. However, these hybrid indices could include
+the bias introduced by the small data correction if the data warranted
+it. The user might prefer to calculate the hybrid indices without the
+small data correction. For this, use the <code>I4</code> matrix in the
+<code>diem</code> output.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(res<span class="sc">$</span>I4, <span class="at">MARGIN =</span> <span class="dv">1</span>, <span class="at">FUN =</span> pHetErrOnStateCount)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">#          [,1] [,2]      [,3]      [,4]      [,5]      [,6]</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># p   0.5000000    0 0.3333333 0.5000000 0.8333333 1.0000000</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Het 0.3333333    0 0.6666667 0.3333333 0.3333333 0.0000000</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Err 0.0000000    0 0.0000000 0.0000000 0.0000000 0.3333333</span></span></code></pre></div>
 <ol start="3" style="list-style-type: decimal">
-<li><strong>I expect more than two groups of samples in my data. Can I use <code>diemr</code>?</strong></li>
+<li><strong>I expect more than two groups of samples in my data. Can I
+use <code>diemr</code>?</strong></li>
 </ol>
-<p>Yes. Multiple barriers to geneflow between multiple groups of samples can be identified iteratively with help from the argument <code>ChosenInds</code>. For example, let’s assume that the individual 2 was identified as belonging to one side of the barrier and being separated from other by the steepest change in the hybrid index. In the next <code>diem</code> run, we exclude the individual 2, adjusting the ploidies to reflect the omission.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">ploidies2 &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">samples2 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span><span class="op">:</span><span class="dv">6</span>)</a>
-<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="kw">CheckDiemFormat</span>(<span class="dt">files =</span> filepaths, </a>
-<a class="sourceLine" id="cb11-4" data-line-number="4">                <span class="dt">ChosenInds =</span> samples2, </a>
-<a class="sourceLine" id="cb11-5" data-line-number="5">                <span class="dt">ploidy =</span> ploidies2)</a>
-<a class="sourceLine" id="cb11-6" data-line-number="6"><span class="co"># File check passed: TRUE</span></a>
-<a class="sourceLine" id="cb11-7" data-line-number="7"><span class="co"># Ploidy check passed: TRUE</span></a>
-<a class="sourceLine" id="cb11-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb11-9" data-line-number="9">res2 &lt;-<span class="st"> </span><span class="kw">diem</span>(<span class="dt">files =</span> filepaths, </a>
-<a class="sourceLine" id="cb11-10" data-line-number="10">             <span class="dt">ChosenInds =</span> samples2,</a>
-<a class="sourceLine" id="cb11-11" data-line-number="11">             <span class="dt">ploidy =</span> ploidies2,</a>
-<a class="sourceLine" id="cb11-12" data-line-number="12">             <span class="dt">nCores =</span> <span class="dv">1</span>,</a>
-<a class="sourceLine" id="cb11-13" data-line-number="13">             <span class="dt">markerPolarity =</span> <span class="kw">list</span>(<span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>)))</a>
-<a class="sourceLine" id="cb11-14" data-line-number="14">             </a>
-<a class="sourceLine" id="cb11-15" data-line-number="15"><span class="co"># calculate hybrid indices from updated I4</span></a>
-<a class="sourceLine" id="cb11-16" data-line-number="16">h.res2 &lt;-<span class="st"> </span><span class="kw">apply</span>(res2<span class="op">$</span>I4, </a>
-<a class="sourceLine" id="cb11-17" data-line-number="17">                <span class="dt">MARGIN =</span> <span class="dv">1</span>, </a>
-<a class="sourceLine" id="cb11-18" data-line-number="18">                <span class="dt">FUN =</span> pHetErrOnStateCount)[<span class="dv">1</span>, ]</a>
-<a class="sourceLine" id="cb11-19" data-line-number="19">                </a>
-<a class="sourceLine" id="cb11-20" data-line-number="20"><span class="co"># set names for the hybrid index values</span></a>
-<a class="sourceLine" id="cb11-21" data-line-number="21">h.res2 &lt;-<span class="st"> </span><span class="kw">setNames</span>(h.res2, <span class="dt">nm =</span> samples2)</a>
-<a class="sourceLine" id="cb11-22" data-line-number="22"><span class="co">#    1    3    4    5    6 </span></a>
-<a class="sourceLine" id="cb11-23" data-line-number="23"><span class="co"># 0.50 0.33 0.50 0.83 1.00 </span></a>
-<a class="sourceLine" id="cb11-24" data-line-number="24"></a>
-<a class="sourceLine" id="cb11-25" data-line-number="25"><span class="co"># calculate the center of the maximum hybrid index change</span></a>
-<a class="sourceLine" id="cb11-26" data-line-number="26">diffs &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">rollmean =</span> zoo<span class="op">::</span><span class="kw">rollmean</span>(<span class="kw">sort</span>(h.res2), <span class="dt">k =</span> <span class="dv">2</span>),</a>
-<a class="sourceLine" id="cb11-27" data-line-number="27">                    <span class="dt">diff =</span> <span class="kw">diff</span>(<span class="kw">sort</span>(h.res2), <span class="dt">lag =</span> <span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb11-28" data-line-number="28">h.res2.c &lt;-<span class="st"> </span>diffs<span class="op">$</span>rollmean[<span class="kw">which.max</span>(diffs<span class="op">$</span>diff)]</a>
-<a class="sourceLine" id="cb11-29" data-line-number="29"><span class="co"># [1] 0.6666667</span></a></code></pre></div>
-<p>Since the center of the barrier is at 0.67 now, <code>diem</code> separated individuals 1, 3, and 4 from a group that includes 5, 6. Combined with the result from the first <code>diem</code> run, we have identified three groups in the dataset: (2), (1, 3, 4), and (5, 6).</p>
+<p>Yes. Multiple barriers to geneflow between multiple groups of samples
+can be identified iteratively with help from the argument
+<code>ChosenInds</code>. For example, let’s assume that the individual 2
+was identified as belonging to one side of the barrier and being
+separated from other by the steepest change in the hybrid index. In the
+next <code>diem</code> run, we exclude the individual 2, adjusting the
+ploidies to reflect the omission.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ploidies2 <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>samples2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span><span class="sc">:</span><span class="dv">6</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">CheckDiemFormat</span>(<span class="at">files =</span> filepaths, </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">ChosenInds =</span> samples2, </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">ploidy =</span> ploidies2)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># File check passed: TRUE</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Ploidy check passed: TRUE</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>res2 <span class="ot">&lt;-</span> <span class="fu">diem</span>(<span class="at">files =</span> filepaths, </span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">ChosenInds =</span> samples2,</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">ploidy =</span> ploidies2,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">nCores =</span> <span class="dv">1</span>,</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">markerPolarity =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>)))</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>             </span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate hybrid indices from updated I4</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>h.res2 <span class="ot">&lt;-</span> <span class="fu">apply</span>(res2<span class="sc">$</span>I4, </span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>                <span class="at">MARGIN =</span> <span class="dv">1</span>, </span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>                <span class="at">FUN =</span> pHetErrOnStateCount)[<span class="dv">1</span>, ]</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="co"># set names for the hybrid index values</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>h.res2 <span class="ot">&lt;-</span> <span class="fu">setNames</span>(h.res2, <span class="at">nm =</span> samples2)</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="co">#    1    3    4    5    6 </span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.50 0.33 0.50 0.83 1.00 </span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the center of the maximum hybrid index change</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>diffs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">rollmean =</span> zoo<span class="sc">::</span><span class="fu">rollmean</span>(<span class="fu">sort</span>(h.res2), <span class="at">k =</span> <span class="dv">2</span>),</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>                    <span class="at">diff =</span> <span class="fu">diff</span>(<span class="fu">sort</span>(h.res2), <span class="at">lag =</span> <span class="dv">1</span>))</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>h.res2.c <span class="ot">&lt;-</span> diffs<span class="sc">$</span>rollmean[<span class="fu">which.max</span>(diffs<span class="sc">$</span>diff)]</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] 0.6666667</span></span></code></pre></div>
+<p>Since the center of the barrier is at 0.67 now, <code>diem</code>
+separated individuals 1, 3, and 4 from a group that includes 5, 6.
+Combined with the result from the first <code>diem</code> run, we have
+identified three groups in the dataset: (2), (1, 3, 4), and (5, 6).</p>
 <ol start="4" style="list-style-type: decimal">
+<li><strong>The hybrid indices in my dataset are too similar. I expected
+them to look more like the rescaled hybrid indices. What is
+wrong?</strong></li>
+</ol>
+<p>The input data probably contains invariant sites, which weight the
+hybrid indices to be similar between individuals. Make sure to use only
+variable sites. Alternatively, filter sites with lowest diagnostic index
+after the <code>diem</code> analysis and recalculate the hybrid indices
+with the filtered data.</p>
+<ol start="5" style="list-style-type: decimal">
 <li><strong>How to cite <code>diemr</code>?</strong></li>
 </ol>
 <p>To use <code>diemr</code> in a publication, please cite:</p>
-<p>Baird S. J. E., Petruzela J., Jaron I., Skrabanek P., Martinkova N. 2022. diemr: Genome polarisation for detecting barriers to geneflow in R. bioRxiv 2022.03.24.485605, doi: 10.1101/2022.03.24.485605.</p>
+<p>Baird S. J. E., Petruzela J., Jaron I., Skrabanek P., Martinkova N.
+2022. Genome polarisation for detecting barriers to geneflow. Methods in
+Ecology and Evolution, doi: 10.1111/2041-210X.14010.</p>
 </div>
 
 

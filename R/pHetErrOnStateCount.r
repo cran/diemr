@@ -7,7 +7,7 @@
 #' @param sCount a numeric vector of length 4 with allele counts for missing data,
 #'               homozygots for allele 1, heterozygots, and homozygots for allele 2.
 #' @return Returns a named numeric vector with three values: p - hybrid index,
-#'         Het - heterozigosity,
+#'         Het - heterozygosity,
 #'         Err - error rate.
 #' @details Allele counts are genomic state counts multiplied by ploidy. As different
 #'   compartments might have different ploidies (e.g. autosomal markers, sex chromosomes,

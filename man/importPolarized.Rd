@@ -2,7 +2,7 @@
 % Please edit documentation in R/importPolarized.r
 \name{importPolarized}
 \alias{importPolarized}
-\title{Imports genomic data polarized according to the the specification}
+\title{Imports genomic data polarized according to the specification}
 \usage{
 importPolarized(file, changePolarity, ChosenInds)
 }

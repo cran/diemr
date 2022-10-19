@@ -12,7 +12,7 @@
 #'  input format.
 #'
 #'  Ploidies must be given as a list with each element corresponding to a genomic
-#'  compartment (aka a file). For each compartment, the numberic vector specifying
+#'  compartment (aka a file). For each compartment, the numeric vector specifying
 #'  ploidies of all individuals chosen for the specific analysis must be given.
 #' @return Returns invisible \code{TRUE} if all files are executable by \code{diem}. Exits
 #'    with informative error messages otherwise, specifying file names and lines with
