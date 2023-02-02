@@ -2,7 +2,7 @@
 % Please edit documentation in R/CheckDiemFormat.r
 \name{CheckDiemFormat}
 \alias{CheckDiemFormat}
-\title{Diadem input file checker}
+\title{diem input file checker}
 \usage{
 CheckDiemFormat(files, ChosenInds, ploidy)
 }

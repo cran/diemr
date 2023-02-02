@@ -1,4 +1,10 @@
-# diemr 1.1, build
+# diemr 1.1.1, released 02-02-2023
+
+- Fixed potential infinite loop error in halting condition of `diem`
+
+
+
+# diemr 1.1, released 19-10-2022
 
 - Updated README file.
 - Added user-choice of colours in `plotPolarized`.

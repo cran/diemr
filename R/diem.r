@@ -309,8 +309,7 @@ diem <- function(files, ploidy = list(2), markerPolarity = FALSE, ChosenInds,
     # check if the overall state is the same as before
     if (res[[1]]) {
       iterations <- which(duplicatedMarkerSets != rev(duplicated(rev(markers[, 2]))))
-      if (length(iterations) != 2) stop("Something is very wrong with CheckDuplicated. Infinite loop risk. Run diem with different null polarities")
-      res[[1]] <- all(I4changes[[iterations[1]]] == I4changes[[iterations[2]]])
+      res[[1]] <- all(I4changes[[iterations[length(iterations)]]] == I4changes[[iterations[1]]])
       if (verbose & res[[1]]) {
         cat("\nIterations ", iterations, "called the same marker sets to change and the overall I4 was identical in both cases. Congratulations, the EM converged.\n",
           file = logfile, append = TRUE
@@ -536,7 +535,7 @@ diem <- function(files, ploidy = list(2), markerPolarity = FALSE, ChosenInds,
   #########################
 
   while (!ActualLimitCycle & (IterationCount <= maxIterations)) {
-    message("diadem iteration: ", IterationCount)
+    message("diem iteration: ", IterationCount)
 
 
     ###################################
