@@ -316,7 +316,7 @@ diem <- function(files, ploidy = list(2), markerPolarity = FALSE, ChosenInds,
         )
       }
       # include previous iterations with identical state in result
-      res[[2]] <- iterations
+      res[[2]] <- iterations[c(1, length(iterations))]
     }
 
     return(res)

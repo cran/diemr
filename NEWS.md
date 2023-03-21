@@ -1,6 +1,15 @@
+# diemr 1.2, released 21-03-2023
+
+- Added `vcf2diem` to convert SNP in vcf format to diem genotypes.
+- Added `myotis` vcf dataset with documentation.
+- Added vignette `Importing data for genome polarisation`.
+- Updated CITATION.
+
+
+
 # diemr 1.1.1, released 02-02-2023
 
-- Fixed potential infinite loop error in halting condition of `diem`
+- Fixed potential infinite loop error in halting condition of `diem`.
 
 
 

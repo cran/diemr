@@ -10,16 +10,16 @@ bibentry(bibtype = "article",
   					person("Pavel", "Skrabanek"),
   					person("Natalia", "Martinkova")
                    ),
-  year         = "2022",
+  year         = "2023",
   journal	   = "Methods in Ecology and Evolution",
-  pages		   = "",
+  volume	   = "14",
+  pages		   = "512-528",
   doi          = "10.1111/2041-210X.14010",
-  note = "available from 15 Nov 2022",
 
   textVersion  =
-  paste("Baird S. J. E., Petruzela J., Jaron I., Skrabanek P., and Martinkova N. (2022).",
+  paste("Baird S. J. E., Petruzela J., Jaron I., Skrabanek P., and Martinkova N. (2023).",
         "Genome polarisation for detecting barriers to geneflow.",
-        "Methods in Ecology and Evolution, doi: 10.1111/2041-210X.14010.")
+        "Methods in Ecology and Evolution 14, 512-528, doi: https://doi.org/10.1111/2041-210X.14010.")
 )
 
 bibentry(bibtype = "Manual", 
