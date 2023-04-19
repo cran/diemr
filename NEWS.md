@@ -1,3 +1,9 @@
+# diemr 1.2.1, 
+
+- Added link to bug reports page.
+- Fixed bug in `vcf2diem` for multiallelic SNPs.
+
+
 # diemr 1.2, released 21-03-2023
 
 - Added `vcf2diem` to convert SNP in vcf format to diem genotypes.

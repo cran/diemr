@@ -70,3 +70,17 @@ test_that("incorrect chunk size", {
 	
 
 })
+
+
+test_that("alphabetic order in multiallelic SNPs", {
+
+	filename <- system.file("extdata", "testdata.vcf", package = "diemr")
+	
+	expect_snapshot(
+	     x = vcf2diem(SNP = filename, filename = "multiallelic.txt", chunk = 1)
+	)
+	
+	
+
+
+})

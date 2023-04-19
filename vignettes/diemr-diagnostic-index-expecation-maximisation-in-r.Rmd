@@ -289,4 +289,4 @@ The input data probably contains invariant sites, which weight the hybrid indice
 
 To use `diemr` in a publication, please cite:
 
-Baird S. J. E., Petruzela J., Jaron I., Skrabanek P., Martinkova N. 2022. Genome polarisation for detecting barriers to geneflow. Methods in Ecology and Evolution, doi: 10.1111/2041-210X.14010.
+> Baird S. J. E., Petruzela J., Jaron I., Skrabanek P., Martinkova N. 2023. Genome polarisation for detecting barriers to geneflow. Methods in Ecology and Evolution, 14: 512--528. doi: 10.1111/2041-210X.14010.

@@ -32,17 +32,17 @@ very large genomic datasets.
 \if{html}{\out{<div class="sourceCode">}}\preformatted{ The number of files \code{vcf2diem} creates depends on the \code{chunk} argument
  and class of the \code{SNP} object. 
  \\itemize\{
-   \\item\{When \code{chunk = 1}, one output file will be created.\}
-   \\item\{Values of \code{chunk < 100} are interpreted as the number of files into which to
+   \\item When \code{chunk = 1}, one output file will be created.
+   \\item Values of \code{chunk < 100} are interpreted as the number of files into which to
  split data in \code{SNP}. For \code{SNP} object of class \code{vcfR}, the number
  of markers per file is calculated from the dimensions of \code{SNP}. When class
  of \code{SNP} is \code{character}, the number of markers per file is approximated
  from a model with a message. If this number is inappropriate for the expected
  output, provide the intended number of markers per file in \code{chunk} greater
  than 100. \code{vcf2diem} will scan the whole input \code{SNP} file, creating
- additional output files until the last line in \code{SNP} is reached.\}
-   \\item\{Values of \code{chunk >= 100} mean that each output file
- in diem format will contain \code{chunk} number of lines with the data in \code{SNP}.\}
+ additional output files until the last line in \code{SNP} is reached.
+   \\item Values of \code{chunk >= 100} mean that each output file
+ in diem format will contain \code{chunk} number of lines with the data in \code{SNP}.
 \}
 }\if{html}{\out{</div>}}
 }
