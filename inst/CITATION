@@ -19,7 +19,7 @@ bibentry(bibtype = "article",
   textVersion  =
   paste("Baird S. J. E., Petruzela J., Jaron I., Skrabanek P., and Martinkova N. (2023).",
         "Genome polarisation for detecting barriers to geneflow.",
-        "Methods in Ecology and Evolution 14, 512-528, doi: https://doi.org/10.1111/2041-210X.14010.")
+        "Methods in Ecology and Evolution 14, 512-528, doi: 10.1111/2041-210X.14010.")
 )
 
 bibentry(bibtype = "Manual", 

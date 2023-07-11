@@ -16,9 +16,9 @@
 #'
 #'      The number of files \code{vcf2diem} creates depends on the \code{chunk} argument
 #'      and class of the \code{SNP} object. 
-#'      \itemize{
-#'        \item When \code{chunk = 1}, one output file will be created.
-#'        \item Values of \code{chunk < 100} are interpreted as the number of files into which to
+#'      
+#'       * When \code{chunk = 1}, one output file will be created.
+#'       * Values of \code{chunk < 100} are interpreted as the number of files into which to
 #'      split data in \code{SNP}. For \code{SNP} object of class \code{vcfR}, the number
 #'      of markers per file is calculated from the dimensions of \code{SNP}. When class
 #'      of \code{SNP} is \code{character}, the number of markers per file is approximated
@@ -26,9 +26,12 @@
 #'      output, provide the intended number of markers per file in \code{chunk} greater
 #'      than 100. \code{vcf2diem} will scan the whole input \code{SNP} file, creating
 #'      additional output files until the last line in \code{SNP} is reached.
-#'        \item Values of \code{chunk >= 100} mean that each output file
+#'       * Values of \code{chunk >= 100} mean that each output file
 #'      in diem format will contain \code{chunk} number of lines with the data in \code{SNP}.
-#'     }
+#'     
+#'      When the vcf file contains markers non-informative for genome polarisation, those 
+#'      those are removed and listed in a file *omittedLoci.txt* in the working directory. 
+#'      The omitted loci are identified by their information in the CHROM and POS columns.
 #' @return No value returned, called for side effects.
 #' @importFrom vcfR getFIX extract.gt
 #' @importFrom tools file_ext file_path_sans_ext
@@ -68,6 +71,8 @@ vcf2diem <- function(SNP, filename, chunk = 1L, ...) {
     chunk <- chunk[1]
     warning("Different chunk sizes are not permitted. Using chunk size of ", chunk, " for all files.")
   }
+  # initialize omittedLoci.txt
+  cat("CHROM\tPOS\n", file = "omittedLoci.txt", append = FALSE)
 
 
 
@@ -147,8 +152,25 @@ vcf2diem <- function(SNP, filename, chunk = 1L, ...) {
     for (i in 1:5) {
       SNP <- sub(patterns[i], replacements[i], SNP, perl = TRUE)
     }
-
-    return(SNP)
+    
+	# identify non-informative markers
+	I4 <- t(apply(SNP, MARGIN = 1, FUN = sStateCount))
+	# only heterozygots
+	# only one heterozygous individual
+	nonInformative <- (I4[, 2] == 0 & I4[, 4] == 0) | (I4[, 3] == 1 & I4[, 2] == 0) | (I4[, 3] == 1 & I4[, 4] == 0)
+	
+	if(any(nonInformative)){
+	  write.table(INFO[nonInformative, 1:2], 
+	    file = "omittedLoci.txt", 
+	    sep = "\t", 
+	    quote = FALSE,
+		row.names = FALSE, 
+		col.names = FALSE, 
+		append = TRUE
+	  )
+	}
+	
+    return(SNP[!nonInformative, ])
   }
 
 

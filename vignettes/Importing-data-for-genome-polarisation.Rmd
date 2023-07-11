@@ -47,7 +47,7 @@ vcf2diem(SNP = inputfile, filename = outputfile, chunk = 2)
 # Done with chunk 1
 ```
 
-The `vcf2diem` function processes **diploid** data at this time. The marker order will be identical to that in the original vcf file. 
+The `vcf2diem` function processes **diploid** data at this time. The marker order will be identical to that in the original vcf file (but see chapter [Markers not informative for genome polarisation]). 
 
 
 
@@ -63,9 +63,17 @@ and `U` (symbol "_" is also allowed) is an unknown state that can be a missing g
 
 What logically follows from this description is that genome polarisation is meaningful only for variant markers (sites). Invariant markers will have **low support** and, though they will not change the outcome, they will slow down convergence and obscure the nature of change between taxa. Their obscuring effect is removed by rescaling the hybrid indices onto $[0,1]$ during `diem` iterations.
 
-Including invariant markers in genome polarisation is acceptable, and likely unavoidable. A proportion of truly invariant markers will be mis-diagnosed as variant due to sequencing error.
+Including invariant markers in genome polarisation is acceptable, and likely unavoidable. A proportion of truly invariant markers will be mis-diagnosed as variant due to sequencing errors.
 
 At this time, genome polarisation uses variant markers where alleles differ in nucleotide substitutions. Insertions or deletions (indels) are not allowed among the most frequent alleles in the `vcf2diem` function. 
+
+
+
+## Markers not informative for genome polarisation
+
+Except invariant markers, some variant markers are also uninformative for genome polarisation. Markers that include only missing data and heterozygous genotypes are unpolarisable. In general applications, one might wish to exclude markers that are only included in a `vcf` due to the presence of a single heterozygous individual. 
+
+Uninformative markers will have support equal to 0, and their polarity will thus be equal to the null polarity. Including uninformative markers has similar consequences to including invariant sites. When a user wishes to retain such markers, we advice to then filter polarised markers with high support for subsequent analyses and interpretation.
 
 
 ## Haploid data
@@ -137,6 +145,13 @@ apply(myotis, MARGIN = 2,
 # FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
          
 ```
+
+Starting from version 1.2.2, `vcf2diem` removes markers that include 
+1. only missing data and heterozygotes, 
+1. missing data, homozygotes for the reference allele and one heterozygote. 
+
+We include a list of the removed markers in a file omittedLoci.txt in the working directory. The file includes information from columns `CHROM` and `POS` for the respective markers. **The file omittedLoci.txt must be checked when interpreting polarised markers** to ensure correct marker annotation.
+
 
 
 ## Polyploid data

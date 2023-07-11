@@ -12,7 +12,7 @@
 
 <meta name="author" content="Natália Martínková" />
 
-<meta name="date" content="2023-04-19" />
+<meta name="date" content="2023-07-11" />
 
 <title>Importing data for genome polarisation</title>
 
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Importing data for genome polarisation</h1>
 <h4 class="author">Natália Martínková</h4>
-<h4 class="date">2023-04-19</h4>
+<h4 class="date">2023-07-11</h4>
 
 
 <div id="TOC">
@@ -350,6 +350,8 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 to diem format</a>
 <ul>
 <li><a href="#invariant-sites-and-indels" id="toc-invariant-sites-and-indels">Invariant sites and indels</a></li>
+<li><a href="#markers-not-informative-for-genome-polarisation" id="toc-markers-not-informative-for-genome-polarisation">Markers not
+informative for genome polarisation</a></li>
 <li><a href="#haploid-data" id="toc-haploid-data">Haploid data</a></li>
 <li><a href="#diploid-data" id="toc-diploid-data">Diploid data</a>
 <ul>
@@ -395,7 +397,8 @@ must be included in the data conversion step.</p>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Done with chunk 1</span></span></code></pre></div>
 <p>The <code>vcf2diem</code> function processes <strong>diploid</strong>
 data at this time. The marker order will be identical to that in the
-original vcf file.</p>
+original vcf file (but see chapter <a href="#markers-not-informative-for-genome-polarisation">Markers not
+informative for genome polarisation</a>).</p>
 </div>
 <div id="principle-of-conversion-to-diem-format" class="section level1">
 <h1>Principle of conversion to diem format</h1>
@@ -420,11 +423,26 @@ rescaling the hybrid indices onto <span class="math inline">\([0,1]\)</span> dur
 iterations.</p>
 <p>Including invariant markers in genome polarisation is acceptable, and
 likely unavoidable. A proportion of truly invariant markers will be
-mis-diagnosed as variant due to sequencing error.</p>
+mis-diagnosed as variant due to sequencing errors.</p>
 <p>At this time, genome polarisation uses variant markers where alleles
 differ in nucleotide substitutions. Insertions or deletions (indels) are
 not allowed among the most frequent alleles in the <code>vcf2diem</code>
 function.</p>
+</div>
+<div id="markers-not-informative-for-genome-polarisation" class="section level2">
+<h2>Markers not informative for genome polarisation</h2>
+<p>Except invariant markers, some variant markers are also uninformative
+for genome polarisation. Markers that include only missing data and
+heterozygous genotypes are unpolarisable. In general applications, one
+might wish to exclude markers that are only included in a
+<code>vcf</code> due to the presence of a single heterozygous
+individual.</p>
+<p>Uninformative markers will have support equal to 0, and their
+polarity will thus be equal to the null polarity. Including
+uninformative markers has similar consequences to including invariant
+sites. When a user wishes to retain such markers, we advice to then
+filter polarised markers with high support for subsequent analyses and
+interpretation.</p>
 </div>
 <div id="haploid-data" class="section level2">
 <h2>Haploid data</h2>
@@ -520,6 +538,14 @@ conversion.</p>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#    m1    m2    m3    m4    m5    m6    m7    m8    m9   m10   m11 </span></span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE </span></span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>         </span></code></pre></div>
+<p>Starting from version 1.2.2, <code>vcf2diem</code> removes markers
+that include 1. only missing data and heterozygotes, 1. missing data,
+homozygotes for the reference allele and one heterozygote.</p>
+<p>We include a list of the removed markers in a file omittedLoci.txt in
+the working directory. The file includes information from columns
+<code>CHROM</code> and <code>POS</code> for the respective markers.
+<strong>The file omittedLoci.txt must be checked when interpreting
+polarised markers</strong> to ensure correct marker annotation.</p>
 </div>
 </div>
 <div id="polyploid-data" class="section level2">
