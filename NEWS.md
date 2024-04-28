@@ -1,4 +1,10 @@
-# dierm 1.2.2, released 11-07-2023 
+# diemr 1.2.3, released 24-04-2024
+
+- updated `vcf2diem` functionality to optionally require homozygous individuals for both most frequent alleles.
+
+
+
+# diemr 1.2.2, released 11-07-2023 
 
 - Modified `vcf2diem` so that markers without homozygous genotypes or markers with only one heterozygous genotype are removed as non-informative for genome polarisation.
 - Updated vignette `Importing data for genome polarisation`.
