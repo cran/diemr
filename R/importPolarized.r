@@ -19,7 +19,7 @@
 #' @export
 #' @examples
 #' dat <- importPolarized(
-#'   file = system.file("extdata", "data6x3.txt", package = "diemr"),
+#'   file = system.file("extdata", "data7x3.txt", package = "diemr"),
 #'   changePolarity = c(FALSE, TRUE, TRUE),
 #'   ChosenInds = 1:6
 #' )

@@ -1,6 +1,17 @@
-# diemr 1.2.3, released 24-04-2024
+# diemr 1.3, released 14-06-2024
 
-- updated `vcf2diem` functionality to optionally require homozygous individuals for both most frequent alleles.
+- Fixed bug in `vcf2diem` for multiallelic markers where REF allele is rare.
+- Improved user-flexibility in reporting verbose EM search in `diem`. As a consequence `ModelOfDiagnostic` is no longer exported.
+- Added vignette `Understanding genome polarisation output files`.
+- Removed warnings when generating random null polarities.
+- Hybrid indices and the 4-genomic state count matrix I4 are now calculated from the polarised genomes for all individuals. As a result, `diem` now requires ploidies for all individuals in the input files listed in the `files` argument.
+- Set default `ploidy = FALSE` in `diem` that assumes all individuals are diploid across all compartments. 
+
+
+
+# diemr 1.2.3, released 28-04-2024
+
+- Updated `vcf2diem` functionality to optionally require homozygous individuals for both most frequent alleles.
 
 
 

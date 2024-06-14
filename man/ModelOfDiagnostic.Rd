@@ -4,7 +4,14 @@
 \alias{ModelOfDiagnostic}
 \title{Model of Diagnostic Marker Based on All Individual State Counts}
 \usage{
-ModelOfDiagnostic(I4, OriginalHI, epsilon = 0.99, verbose = FALSE, ...)
+ModelOfDiagnostic(
+  I4,
+  OriginalHI,
+  epsilon = 0.99,
+  verbose = FALSE,
+  folder = "likelihood",
+  ...
+)
 }
 \arguments{
 \item{I4}{a matrix or data.frame with 4 numeric columns
@@ -22,7 +29,9 @@ tolerance setting of the \code{R} session in mind.}
 \item{verbose}{logical or character with path to directory where run diagnostics will
 be saved.}
 
-\item{...}{parameters to be passed to other functions.}
+\item{folder}{character specifying path to a folder for the verbose output.}
+
+\item{...}{additional arguments.}
 }
 \value{
 Matrix with dimensions of I4.
@@ -34,20 +43,6 @@ counts with respect to their weighted similarity to the diagnostic marker states
 }
 \details{
 The \code{OriginalHI} can be calculated with \code{\link{pHetErrOnStateCount}}.
-}
-\examples{
-# state count matrix
-dat <- matrix(c(0, 0, 1, 3, 1, 2, 2, 0, 2, 1, 4, 1), ncol = 4)
-
-# hybrid index calculation, assuming diploid markers
-HI <- apply(dat * 2, MARGIN = 1, FUN = pHetErrOnStateCount)[1, ]
-
-# run model of diagnostics, with the weight of the ideal diagnostic marker being 0.8
-ModelOfDiagnostic(I4 = dat, OriginalHI = HI, epsilon = 0.8)
-#      [,1] [,2] [,3] [,4]
-# [1,]  0.0  5.4  0.4  0.2
-# [2,]  0.0  0.2  0.0  5.6
-# [3,]  0.4  4.4  0.8  0.4
 }
 \seealso{
 \code{\link{diem}} for utilising the model to determine appropriate marker

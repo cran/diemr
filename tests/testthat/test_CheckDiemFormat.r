@@ -5,7 +5,7 @@ test_that("error on file names", {
     object = CheckDiemFormat(
       files = 4,
       ChosenInds = 1:6,
-      ploidy = list(rep(2, 6))
+      ploidy = list(rep(2, 7))
     ),
     regexp = "file argument needs to be a character string"
   )
@@ -14,7 +14,7 @@ test_that("error on file names", {
     object = CheckDiemFormat(
       files = "dummyfilename.txt",
       ChosenInds = 1:6,
-      ploidy = list(rep(2, 6))
+      ploidy = list(rep(2, 7))
     ),
     regexp = "cannot be found"
   )
@@ -24,22 +24,22 @@ test_that("error on file names", {
 test_that("error on ChosenInds", {
   expect_error(
     object = CheckDiemFormat(
-      files = system.file("extdata", "data6x3.txt",
+      files = system.file("extdata", "data7x3.txt",
         package = "diemr"
       ),
       ChosenInds = 1:8,
-      ploidy = list(rep(2, 6))
+      ploidy = list(rep(2, 7))
     ),
     regexp = "contains fewer individuals than the maximum index specified in ChosenInds"
   )
 
   expect_error(
     object = CheckDiemFormat(
-      files = system.file("extdata", "data6x3.txt",
+      files = system.file("extdata", "data7x3.txt",
         package = "diemr"
       ),
       ChosenInds = 2:8,
-      ploidy = list(rep(2, 6))
+      ploidy = list(rep(2, 7))
     ),
     regexp = "contains fewer individuals than the maximum index specified in ChosenInds"
   )
@@ -50,18 +50,18 @@ test_that("error on ChosenInds", {
 test_that("error on Ploidy", {
   expect_error(
     object = CheckDiemFormat(
-      files = system.file("extdata", "data6x3.txt",
+      files = system.file("extdata", "data7x3.txt",
         package = "diemr"
       ),
       ChosenInds = 1:6,
-      ploidy = rep(2, 6)
+      ploidy = rep(2, 7)
     ),
     regexp = "Ploidy must be a list"
   )
 
   expect_error(
     object = CheckDiemFormat(
-      files = system.file("extdata", "data6x3.txt",
+      files = system.file("extdata", "data7x3.txt",
         package = "diemr"
       ),
       ChosenInds = 1:6,
@@ -72,7 +72,7 @@ test_that("error on Ploidy", {
 
   expect_error(
     object = CheckDiemFormat(
-      files = system.file("extdata", "data6x3.txt",
+      files = system.file("extdata", "data7x3.txt",
         package = "diemr"
       ),
       ChosenInds = 1:6,
@@ -83,33 +83,33 @@ test_that("error on Ploidy", {
 
   expect_error(
     object = CheckDiemFormat(
-      files = system.file("extdata", "data6x3.txt",
+      files = system.file("extdata", "data7x3.txt",
         package = "diemr"
       ),
       ChosenInds = 1:6,
-      ploidy = list(rep(2, 7))
+      ploidy = list(rep(2, 8))
     ),
     regexp = "is not a numeric vector of length"
   )
 
   expect_error(
     object = CheckDiemFormat(
-      files = system.file("extdata", "data6x3.txt",
+      files = system.file("extdata", "data7x3.txt",
         package = "diemr"
       ),
       ChosenInds = 1:6,
-      ploidy = list(c(0:5))
+      ploidy = list(c(0:6))
     ),
     regexp = "contain other characters"
   )
 
   expect_error(
     object = CheckDiemFormat(
-      files = system.file("extdata", "data6x3.txt",
+      files = system.file("extdata", "data7x3.txt",
         package = "diemr"
       ),
       ChosenInds = 1:6,
-      ploidy = list(c(1, 1, 2, 2, 0, 3))
+      ploidy = list(c(1, 1, 2, 2, 0, 3, 2))
     ),
     regexp = "contain other characters"
   )

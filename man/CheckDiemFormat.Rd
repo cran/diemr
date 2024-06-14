@@ -11,9 +11,9 @@ CheckDiemFormat(files, ChosenInds, ploidy)
 
 \item{ChosenInds}{numeric vector of indices of individuals to be included in the analysis.}
 
-\item{ploidy}{list of length equal to length of \code{files}. Each element of the list
+\item{ploidy}{logical or list of length equal to length of \code{files}. Each element of the list
 contains a numeric vector with ploidy numbers for all individuals specified in
-the \code{ChosenInds}.}
+the \code{files}.}
 }
 \value{
 Returns invisible \code{TRUE} if all files are executable by \code{diem}. Exits
@@ -37,9 +37,9 @@ ploidies of all individuals chosen for the specific analysis must be given.
 }
 \examples{
 # set up input genotypes file names, ploidies and selection of individual samples
-inputFile <- system.file("extdata", "data6x3.txt", package = "diemr")
-ploidies <- list(c(2, 1, 2, 2, 2, 1))
-inds <- 1:6
+inputFile <- system.file("extdata", "data7x3.txt", package = "diemr")
+ploidies <- list(c(2, 1, 2, 2, 2, 1, 2))
+inds <- 1:7
 
 # check input data
 CheckDiemFormat(files = inputFile, ploidy = ploidies, ChosenInds = inds)

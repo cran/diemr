@@ -23,7 +23,7 @@ test_that("error on arguments in importPolarized", {
 test_that("correct solution of importPolarized", {
   expect_equal(
     object = importPolarized(
-      file = system.file("extdata", "data6x3.txt", package = "diemr"),
+      file = system.file("extdata", "data7x3.txt", package = "diemr"),
       changePolarity = rep(FALSE, 3),
       ChosenInds = 1:6
     ),
@@ -36,7 +36,7 @@ test_that("correct solution of importPolarized", {
 
   expect_equal(
     object = importPolarized(
-      file = system.file("extdata", "data6x3.txt", package = "diemr"),
+      file = system.file("extdata", "data7x3.txt", package = "diemr"),
       changePolarity = c(FALSE, FALSE, TRUE),
       ChosenInds = 1:6
     ),
@@ -50,7 +50,7 @@ test_that("correct solution of importPolarized", {
 
   expect_equal(
     object = importPolarized(
-      file = system.file("extdata", "data6x3.txt", package = "diemr"),
+      file = system.file("extdata", "data7x3.txt", package = "diemr"),
       changePolarity = c(TRUE, TRUE, TRUE),
       ChosenInds = 1:6
     ),
@@ -67,7 +67,7 @@ test_that("correct solution of importPolarized", {
 test_that("correct dimnames in importPolarized", {
   expect_equal(
     object = importPolarized(
-      file = system.file("extdata", "data6x3.txt", package = "diemr"),
+      file = system.file("extdata", "data7x3.txt", package = "diemr"),
       changePolarity = c(TRUE, TRUE, TRUE),
       ChosenInds = c(1:2, 4:6)
     ),
@@ -83,7 +83,7 @@ test_that("correct dimnames in importPolarized", {
 
   expect_equal(
     object = importPolarized(
-      file = system.file("extdata", "data6x3.txt", package = "diemr"),
+      file = system.file("extdata", "data7x3.txt", package = "diemr"),
       changePolarity = c(TRUE, TRUE, TRUE),
       ChosenInds = c(1, 4, 2, 3, 6, 5)
     ),

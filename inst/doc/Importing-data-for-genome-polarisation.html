@@ -12,7 +12,7 @@
 
 <meta name="author" content="Natália Martínková" />
 
-<meta name="date" content="2024-04-28" />
+<meta name="date" content="2024-06-14" />
 
 <title>Importing data for genome polarisation</title>
 
@@ -51,7 +51,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -62,7 +62,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -340,7 +340,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Importing data for genome polarisation</h1>
 <h4 class="author">Natália Martínková</h4>
-<h4 class="date">2024-04-28</h4>
+<h4 class="date">2024-06-14</h4>
 
 
 <div id="TOC">
@@ -350,7 +350,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 to diem format</a>
 <ul>
 <li><a href="#invariant-sites-and-indels" id="toc-invariant-sites-and-indels">Invariant sites and indels</a></li>
-<li><a href="#markers-not-informative-for-genome-polarisation" id="toc-markers-not-informative-for-genome-polarisation">Markers not
+<li><a href="#sites-not-informative-for-genome-polarisation" id="toc-sites-not-informative-for-genome-polarisation">Sites not
 informative for genome polarisation</a></li>
 <li><a href="#haploid-data" id="toc-haploid-data">Haploid data</a></li>
 <li><a href="#diploid-data" id="toc-diploid-data">Diploid data</a>
@@ -374,75 +374,76 @@ data</a></li>
 loaded into <code>R</code> to a file with format required by
 <code>diem</code>. To start, load the <code>diemr</code> package or
 install it from CRAN if it is not yet available:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Attempt to load a package, if the package was not available, install and load</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;diemr&quot;</span>, <span class="at">character.only =</span> <span class="cn">TRUE</span>)){</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">install.packages</span>(<span class="st">&quot;diemr&quot;</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">&quot;diemr&quot;</span>, <span class="at">character.only =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># Attempt to load a package, if the package was not available, install and load</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;diemr&quot;</span>, <span class="at">character.only =</span> <span class="cn">TRUE</span>)){</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>    <span class="fu">install.packages</span>(<span class="st">&quot;diemr&quot;</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>    <span class="fu">library</span>(<span class="st">&quot;diemr&quot;</span>, <span class="at">character.only =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>}</span></code></pre></div>
 <p>Next, decide whether all markers in the vcf file should be polarised
 from one file, or whether the analysis will benefit from
 parallelisation. Parallelisation is available on UNIX-based platforms,
-and we advice to use it for large datasets. <code>diem</code> will
-process each file separately, so dividing the data into suitable chunks
-must be included in the data conversion step.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Path to the vcf file</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>inputfile <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;myotis.vcf&quot;</span>, <span class="at">package =</span> <span class="st">&quot;diemr&quot;</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># File name for the output</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># If working directory does not have writing privileges, the filename must include a path to a suitable folder</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>outputfile <span class="ot">&lt;-</span> <span class="st">&quot;myotis&quot;</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert the vcf file to two diem files</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">vcf2diem</span>(<span class="at">SNP =</span> inputfile, <span class="at">filename =</span> outputfile, <span class="at">chunk =</span> <span class="dv">2</span>)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Expecting to include 11 markers per diem file.</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># If you expect more markers in the file, provide suitable chunk size.</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Done with chunk 1</span></span></code></pre></div>
-<p>The <code>vcf2diem</code> function processes <strong>diploid</strong>
-data at this time. The marker order will be identical to that in the
-original vcf file (but see chapter <a href="#markers-not-informative-for-genome-polarisation">Markers not
+and we advise to use it for large datasets. <code>diem</code> itself can
+also work in parallel on multiple data <em>compartments</em>. vcf files
+and <em>compartments</em> can correspond to the same thing OR you can
+concatenate/split vcf2diem outputs to produce <code>diem</code> input
+<em>compartments</em>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Path to the vcf file</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>inputfile <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;myotis.vcf&quot;</span>, <span class="at">package =</span> <span class="st">&quot;diemr&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># File name for the output</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># If working directory does not have writing privileges, the filename must include a path to a suitable folder</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>outputfile <span class="ot">&lt;-</span> <span class="st">&quot;myotis&quot;</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co"># Convert the vcf file to two diem files</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="fu">vcf2diem</span>(<span class="at">SNP =</span> inputfile, <span class="at">filename =</span> outputfile, <span class="at">chunk =</span> <span class="dv">2</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co"># Expecting to include 11 markers per diem file.</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co"># If you expect more markers in the file, provide suitable chunk size.</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co"># Done with chunk 1</span></span></code></pre></div>
+<p>The <code>vcf2diem</code> function processes calls for sites into the
+<code>diem</code> encoding for sites. The site order will be identical
+to that in the original vcf file (but see chapter <a href="#sites-not-informative-for-genome-polarisation">Sites not
 informative for genome polarisation</a>).</p>
 </div>
 <div id="principle-of-conversion-to-diem-format" class="section level1">
 <h1>Principle of conversion to diem format</h1>
 <p>The <code>diemr</code> package uses a concise genome representation,
-differentiating homozygotes for the two most frequent alleles for each
-marker, and their respective heterozygotes. All other genotypes
-represent an unknown state. Specifically, the genotypes encoded as
-<code>0</code> represent homozygotes for one of the two most frequent
-alleles, <code>1</code> are heterozygous genotypes for the two most
-frequent alleles, <code>2</code> are homozygotes for the other allele,
-and <code>U</code> (symbol “_” is also allowed) is an unknown state that
-can be a missing genotype or a genotype that includes a third (or a
-fourth) allele.</p>
+differentiating homozygotes for the two most frequent alleles at each
+site, and their respective heterozygotes (mixed state of the two most
+common alleles). All other genotypes represent an unknown state.
+Specifically, the genotypes encoded as <code>0</code> represent
+homozygotes for one of the two most frequent alleles, <code>1</code> are
+heterozygous (mixed state) genotypes for the two most frequent alleles,
+<code>2</code> are homozygotes for the other allele, and <code>U</code>
+(symbol “_” is also allowed) is an unknown state that can be a missing
+genotype or a genotype that includes a third (or a fourth) allele.</p>
 <div id="invariant-sites-and-indels" class="section level2">
 <h2>Invariant sites and indels</h2>
 <p>What logically follows from this description is that genome
-polarisation is meaningful only for variant markers (sites). Invariant
-markers will have <strong>low support</strong> and, though they will not
-change the outcome, they will slow down convergence and obscure the
-nature of change between taxa. Their obscuring effect is removed by
-rescaling the hybrid indices onto <span class="math inline">\([0,1]\)</span> during <code>diem</code>
-iterations.</p>
-<p>Including invariant markers in genome polarisation is acceptable, and
-likely unavoidable. A proportion of truly invariant markers will be
+polarisation is meaningful only for variant sites (markers). Invariant
+sites will have <strong>low support</strong> and, though they will not
+change the <code>diem</code> outcome, they will slow down convergence
+and obscure the nature of change between taxa. During <code>diem</code>
+iterations their obscuring effect is removed by rescaling the hybrid
+indices onto <span class="math inline">\([0,1]\)</span></p>
+<p>Including invariant sites in genome polarisation is acceptable, and
+likely unavoidable. A proportion of truly invariant sites will be
 mis-diagnosed as variant due to sequencing errors.</p>
 <p>At this time, genome polarisation uses variant markers where alleles
 differ in nucleotide substitutions. Insertions or deletions (indels) are
-not allowed among the most frequent alleles in the <code>vcf2diem</code>
-function.</p>
+not allowed to be classified among the most frequent alleles in the
+<code>vcf2diem</code> function.</p>
 </div>
-<div id="markers-not-informative-for-genome-polarisation" class="section level2">
-<h2>Markers not informative for genome polarisation</h2>
-<p>Except invariant markers, some variant markers are also uninformative
-for genome polarisation. Markers that include only missing data and
+<div id="sites-not-informative-for-genome-polarisation" class="section level2">
+<h2>Sites not informative for genome polarisation</h2>
+<p>Along side invariant sites, some variant sites are also uninformative
+for genome polarisation. Sites that include only missing data and
 heterozygous genotypes are unpolarisable. In general applications, one
-might wish to exclude markers that are only included in a
-<code>vcf</code> due to the presence of a single heterozygous
-individual.</p>
-<p>Uninformative markers will have support equal to 0, and their
-polarity will thus be equal to the null polarity. Including
-uninformative markers has similar consequences to including invariant
-sites. When a user wishes to retain such markers, we advice to then
-filter polarised markers with high support for subsequent analyses and
-interpretation.</p>
+might wish to exclude sites that are only included in a <code>vcf</code>
+due to the presence of a single heterozygous individual.</p>
+<p>Uninformative sites will have support equal to 0, and their polarity
+will thus be equal to the null polarity. Including uninformative sites
+has similar consequences to including invariant sites. When a user
+wishes to retain such sites, we advice to then filter polarised markers
+with high support (or simply high diagnostic index, which is strongly
+correlated with support) for subsequent analyses and interpretation.</p>
 </div>
 <div id="haploid-data" class="section level2">
 <h2>Haploid data</h2>
@@ -451,12 +452,12 @@ heterogametic sex, are usually shown as sequence alignments. To
 illustrate the principle of genome representation used in
 <code>diem</code>, let’s have an 8bp-long alignment with five
 individuals.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> <span class="dv">8</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>ind1   AACCTTGG</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>ind2   TACGATGG</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>ind3   TACC<span class="sc">-</span>TGT</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>ind4   CACGTTGG</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>ind5   AACCTTGT</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="dv">5</span> <span class="dv">8</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>ind1   AACCTTGG</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>ind2   TACGATGG</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>ind3   TACC<span class="sc">-</span>TGT</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>ind4   CACGTTGG</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>ind5   AACCTTGT</span></code></pre></div>
 <p>We can see that the example alignment contains four variant markers
 at sites 1, 4, 5, and 8. Marker 5 contains a deletion in ind3, while
 other markers vary in different nucleotide substitutions. In marker 1,
@@ -464,40 +465,41 @@ two individuals have an allele A, two individuals have an allele T and
 one has a C. This marker can be resolved in terms of two most frequent
 alleles A and T, where the individual ind4 has a third allele and is
 therefore considered as having an unknown genomic state. To convert the
-marker into diem format, we must make a decision on which allele will be
-encoded as 0. The choice can be arbitrary, but good practice is to
-<strong>keep a record of genotype encoding.</strong> Let’s decide that
-all alleles in ind1 will be encoded as 0. Marker 1 will then be
+marker into <code>diem</code> format, we must make a decision on which
+allele will be encoded as 0. The choice is arbitrary. Good practice is
+to <strong>keep a record of genotype encoding</strong>. Let’s decide
+that all alleles in ind1 will be encoded as 0. Marker 1 will then be
 <code>022_0</code>.</p>
 <p>Contrary to DNA sequence alignments, diem format transposes the data.
 Rows in diem input files are markers and columns represent individual
 samples. The diem output for the example alignment will thus have four
 lines representing the four variant markers, and five columns
 representing the individuals.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Marker1   022_0</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>Marker4   <span class="dv">02020</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>Marker5   02_00</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>Marker8   <span class="dv">00202</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>Marker1   <span class="dv">022</span>_0</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>Marker4   <span class="dv">02020</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>Marker5   <span class="dv">02</span>_00</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>Marker8   <span class="dv">00202</span></span></code></pre></div>
 <p>The diem format does not store information on marker identification
-or location. This metadata must be saved separately. Instead,
+or location. This metadata must be saved separately in a ‘bed-like’ file
+(with at minimum the scaffold and position for each site).
 <code>diem</code> uses a prefix <code>S</code> at line starts to ensure
 that all operating systems always read genotypes as strings without
 attempting to convert them into numbers. Encoding of markers 4 and 8
 shown above is at risk of being interpreted as numeric. The final file
-in diem format will be:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>S022_0</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>S02020</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>S02_00</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>S00202</span></code></pre></div>
+in <code>diem</code> format will be:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>S022_0</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>S02020</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>S02_00</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>S00202</span></code></pre></div>
 </div>
 <div id="diploid-data" class="section level2">
 <h2>Diploid data</h2>
 <div id="heterozygotes-in-dna-sequence-alignments" class="section level3">
 <h3>Heterozygotes in DNA sequence alignments</h3>
-<p>Diploid markers in DNA sequence alignment could be resolved in an
-analogous way as haploid markers. Heterozygotes in alignments can be
+<p>Diploid markers in DNA sequence alignment can be resolved in an
+analogous way to haploid markers. Heterozygotes in alignments can be
 identified according to their <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2865858/table/T1/">IUPAC
-DNA ambiguity codes</a>. For example, code W would represent an accepted
+DNA ambiguity codes</a>. For example, code W may represent an accepted
 heterozygote in Marker 1, where the most frequent alleles are A and
 T.</p>
 </div>
@@ -518,46 +520,62 @@ indels are set as unknown.</li>
 <li>Indels in the alternative alleles are set as unknown.</li>
 <li>Overall allele counts in markers with more than two alleles
 representing substitutions are calculated and the two most frequent
-alleles are selected. Ties are resolved according to the allele order in
-the vcf file.</li>
+alleles are selected. Ties are (arbitrarily) resolved according to the
+allele order in the vcf file.</li>
 <li>Third and fourth most frequent substitutions are set as
 unknown.</li>
 </ol>
 <p>The conversion might result in some markers no longer being
-polymorphic. We advice checking how frequent invariant markers are after
+polymorphic. We advise checking how frequent invariant markers are after
 conversion.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import the first converted file for all individuals </span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and without changing marker polarity</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>myotis <span class="ot">&lt;-</span> <span class="fu">importPolarized</span>(<span class="st">&quot;myotis-01.txt&quot;</span>, </span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">changePolarity =</span> <span class="fu">rep</span>(<span class="cn">FALSE</span>, <span class="dv">11</span>), </span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">ChosenInds =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">14</span>)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Check whether a marker includes heterozygotes </span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># or that there is more than one genotype</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(myotis, <span class="at">MARGIN =</span> <span class="dv">2</span>, </span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">FUN =</span> \(x) <span class="fu">any</span>(<span class="fu">grepl</span>(<span class="st">&quot;1&quot;</span>, x)) <span class="sc">|</span> <span class="fu">sum</span>(<span class="fu">levels</span>(<span class="fu">factor</span>(x)) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;0&quot;</span>, <span class="st">&quot;1&quot;</span>, <span class="st">&quot;2&quot;</span>)) <span class="sc">&gt;</span> <span class="dv">1</span>) </span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#    m1    m2    m3    m4    m5    m6    m7    m8    m9   m10   m11 </span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE </span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>         </span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># Import the first converted file for all individuals </span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co"># and without changing marker polarity</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>myotis <span class="ot">&lt;-</span> <span class="fu">importPolarized</span>(<span class="st">&quot;myotis-01.txt&quot;</span>, </span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>                          <span class="at">changePolarity =</span> <span class="fu">rep</span>(<span class="cn">FALSE</span>, <span class="dv">11</span>), </span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>                          <span class="at">ChosenInds =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">14</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co"># Check whether a marker includes heterozygotes </span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co"># or that there is more than one genotype</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="fu">apply</span>(myotis, <span class="at">MARGIN =</span> <span class="dv">2</span>, </span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>      <span class="at">FUN =</span> \(x) <span class="fu">any</span>(<span class="fu">grepl</span>(<span class="st">&quot;1&quot;</span>, x)) <span class="sc">|</span> <span class="fu">sum</span>(<span class="fu">levels</span>(<span class="fu">factor</span>(x)) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;0&quot;</span>, <span class="st">&quot;1&quot;</span>, <span class="st">&quot;2&quot;</span>)) <span class="sc">&gt;</span> <span class="dv">1</span>) </span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a><span class="co">#    m1    m2    m3    m4    m5    m6    m7    m8    m9   m10   m11 </span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="co"># FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE </span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>         </span></code></pre></div>
 <p>Starting from version 1.2.2, <code>vcf2diem</code> removes markers
-that include 1. only missing data and heterozygotes, 1. missing data,
-homozygotes for the reference allele and one heterozygote.</p>
-<p>We include a list of the removed markers in a file omittedLoci.txt in
-the working directory. The file includes information from columns
-<code>CHROM</code> and <code>POS</code> for the respective markers.
-<strong>The file omittedLoci.txt must be checked when interpreting
-polarised markers</strong> to ensure correct marker annotation.</p>
+that include</p>
+<ol style="list-style-type: decimal">
+<li>only missing data and heterozygotes,</li>
+<li>missing data, homozygotes for the most frequent allele and one
+heterozygote,</li>
+<li>missing data, homozygotes for one ALT allele and one
+heterozygote.</li>
+</ol>
+<p>We include a list of the removed markers in a bed-like file ending
+with <em>-includedSites.txt</em> in the working directory. The file
+includes information from columns <code>CHROM</code>, <code>POS</code>,
+and <code>QUAL</code> for the respective markers, and records the (good
+practice) <strong>record of genotype encoding</strong>.</p>
+<p>We include a list of the removed markers in a bed-like file ending
+with <em>-omittedSites.txt</em> in the working directory. The file
+includes information from columns <code>CHROM</code>, <code>POS</code>,
+and <code>QUAL</code> for the respective markers, and provides the
+reason, why the marker was omitted. <strong>The file omittedLoci.txt
+must be checked when interpreting polarised markers</strong> to ensure
+correct marker annotation.</p>
 </div>
 </div>
 <div id="polyploid-data" class="section level2">
 <h2>Polyploid data</h2>
 <p>The same principles apply to higher ploidy datasets. Preparing data
-in diem format for genome polarisation includes these steps:</p>
+in <code>diem</code> format for genome polarisation includes these
+steps:</p>
 <ol style="list-style-type: decimal">
 <li>Remove indels.</li>
-<li>Identify two most frequent alleles for each marker.</li>
-<li>Encode homozygous and heterozygous genotypes that include only the
-two most frequent alleles.</li>
+<li>Identify two most frequent alleles for each site.</li>
+<li>Encode homozygous and heterozygous (mixed) genotypes that include
+only the two most frequent alleles.</li>
 </ol>
+<p>Note that <code>vcf2diem</code> only converts diploid datasets at
+this time, and should not be used to convert polyploid vcf files.</p>
 </div>
 </div>
 

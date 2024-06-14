@@ -4,7 +4,7 @@
 \alias{vcf2diem}
 \title{Convert vcf files to diem format}
 \usage{
-vcf2diem(SNP, filename, chunk = 1L, requireHomozygous = TRUE, ...)
+vcf2diem(SNP, filename, chunk = 1L, requireHomozygous = TRUE)
 }
 \arguments{
 \item{SNP}{character vector with a path to the '.vcf' or '.vcf.gz' file, or an \code{vcfR}
@@ -13,12 +13,10 @@ object. Diploid data are currently supported.}
 \item{filename}{character vector with a path where to save the converted genotypes.}
 
 \item{chunk}{numeric indicating by how many markers should the result be split into
-separate files. \code{chunk = 1} saves all markers into one file.}
+separate files.}
 
 \item{requireHomozygous}{logical whether to require the marker to have at least one
 homozygous individual for each allele.}
-
-\item{...}{additional arguments.}
 }
 \value{
 No value returned, called for side effects.
@@ -29,44 +27,58 @@ chromosome positions to diem format.
 }
 \details{
 Importing vcf files larger than 1GB, and those containing multiallelic
-genotypes is not recommended. Instead, the path to the
-vcf file in \code{SNP} reads the file line by line, and might be a solution for
+genotypes is not recommended. Instead, use the path to the
+vcf file in \code{SNP}. \code{vcf2diem} then reads the file line by line, which is
+a preferred solution for data conversion, especially for
 very large and complex genomic datasets.
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{ The number of files \code{vcf2diem} creates depends on the \code{chunk} argument
- and class of the \code{SNP} object.
+The number of files \code{vcf2diem} creates depends on the \code{chunk} argument
+and class of the \code{SNP} object.
+\itemize{
+\item Values of \code{chunk < 100} are interpreted as the number of files into which to
+split data in \code{SNP}. For \code{SNP} object of class \code{vcfR}, the number
+of markers per file is calculated from the dimensions of \code{SNP}. When class
+of \code{SNP} is \code{character}, the number of markers per file is approximated
+from a model with a message. If this number of markers per file is inappropriate
+for the expected
+output, provide the intended number of markers per file in \code{chunk} greater
+than 100 (values greater than 10000 are recommended for genomic data).
+\code{vcf2diem} will scan the whole input specified in the \code{SNP} file, creating
+additional output files until the last line in \code{SNP} is reached.
+\item Values of \code{chunk >= 100} mean that each output file
+in diem format will contain \code{chunk} number of lines with the data in \code{SNP}.
+}
 
-  * When \code{chunk = 1}, one output file will be created.
-  * Values of \code{chunk < 100} are interpreted as the number of files into which to
- split data in \code{SNP}. For \code{SNP} object of class \code{vcfR}, the number
- of markers per file is calculated from the dimensions of \code{SNP}. When class
- of \code{SNP} is \code{character}, the number of markers per file is approximated
- from a model with a message. If this number of markers per file is inappropriate 
- for the expected
- output, provide the intended number of markers per file in \code{chunk} greater
- than 100. \code{vcf2diem} will scan the whole input in the \code{SNP} file, creating
- additional output files until the last line in \code{SNP} is reached.
-  * Values of \code{chunk >= 100} mean that each output file
- in diem format will contain \code{chunk} number of lines with the data in \code{SNP}.
+When the vcf file contains markers not informative for genome polarisation,
+those are removed and listed in a file ending with \emph{omittedSites.txt} in the
+directory specified in the \code{SNP} argument or in the working directory.
+The omitted loci are identified by their information in the CHROM and POS columns,
+and include the QUAL column data. The last column is an integer specifying
+the reason why the respective marker was omitted. The reasons why markers are
+not informative for genome polarisation using \code{diem} are:
+\enumerate{
+\item Marker has fewer than 2 alleles representing substitutions.
+\item Required homozygous individuals for the 2 most frequent alleles are not present
+(optional, controlled
+by the \code{requireHomozygous} argument).
+\item The second most frequent allele is found only in one heterozygous individual.
+\item Dataset is invariant for the most frequent allele.
+\item Dataset is invariant for the allele listed as the first ALT in the vcf input.
+}
 
- When the vcf file contains markers non-informative for genome polarisation, those
- those are removed and listed in a file *omittedLoci.txt* in the working directory.
- The omitted loci are identified by their information in the CHROM and POS columns.
- The CHROM and POS information for loci included in the converted files are in
- *includedLoci.txt*.
-}\if{html}{\out{</div>}}
+The CHROM, POS, and QUAL information for loci included in the converted files are
+listed in the file ending with \emph{includedSites.txt}. Additional columns show which
+allele is
+encoded as 0 in its homozygous state and which is encoded as 2.
 }
 \examples{
 \dontrun{
 # vcf2diem will write files to a working directory or a specified folder
 # make sure the working directory or the folder are at a location with write permission
 myofile <- system.file("extdata", "myotis.vcf", package = "diemr")
-myovcf <- vcfR::read.vcfR(myofile)
 
 vcf2diem(SNP = myofile, filename = "test1")
 vcf2diem(SNP = myofile, filename = "test2", chunk = 3)
-vcf2diem(SNP = myovcf, filename = "test3")
-vcf2diem(SNP = myovcf, filename = "test4", chunk = 3)
 }
 }
 \author{

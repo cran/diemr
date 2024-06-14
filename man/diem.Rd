@@ -6,7 +6,7 @@
 \usage{
 diem(
   files,
-  ploidy = list(2),
+  ploidy = FALSE,
   markerPolarity = FALSE,
   ChosenInds,
   epsilon = 0.99999,
@@ -19,9 +19,9 @@ diem(
 \arguments{
 \item{files}{character vector with paths to files with genotypes.}
 
-\item{ploidy}{list of length equal to length of \code{files}. Each element of the list
+\item{ploidy}{logical or list of length equal to length of \code{files}. Each element of the list
 contains a numeric vector with ploidy numbers for all individuals specified in
-the \code{ChosenInds}.}
+the \code{files}.}
 
 \item{markerPolarity}{\code{FALSE} or list of logical vectors.}
 
@@ -35,6 +35,7 @@ tolerance setting of the \code{R} session in mind.}
 be saved.}
 
 \item{nCores}{numeric. Number of cores to be used for parallelisation. Must be
+at most equal to the number of files in the \code{files} argument, and
 \code{nCores = 1} on Windows.}
 
 \item{maxIterations}{numeric.}
@@ -79,16 +80,25 @@ one male and two females,
 ploidy for the sex chromosomes should be vectors reflecting that females have two X
 chromosomes, but males only one, and females have no Y chromosomes:
 \code{ploidy = list(rep(2, 3), c(1, 2, 2), c(1, 0, 0))}.
+
+When \code{verbose = TRUE}, \code{diem} will output multiple files with information
+on the iterations of the EM algorithm, including tracking marker polarities and the
+respective likelihood-based diagnostics. See vignette \code{vignette("diem_output",
+  package = "diemr")} for a detailed explanation of the individual output files.
 }
 \note{
 To ensure that the data input format of the genotype files, ploidies and individual
 selection are readable for \code{diem}, first use \code{\link{CheckDiemFormat}}.
 Fix all errors, and run \code{diem} only once the checks all passed.
+
+The working directory or a folder optionally specified in the \code{verbose}
+argument must have write permissions. \code{diem} will store temporary files in the
+location and output results files.
 }
 \examples{
 # set up input genotypes file names, ploidies and selection of individual samples
-inputFile <- system.file("extdata", "data6x3.txt", package = "diemr")
-ploidies <- list(c(2, 1, 2, 2, 2, 1))
+inputFile <- system.file("extdata", "data7x3.txt", package = "diemr")
+ploidies <- list(c(2, 1, 2, 2, 2, 1, 2))
 inds <- 1:6
 
 # check input data
@@ -98,7 +108,7 @@ CheckDiemFormat(files = inputFile, ploidy = ploidies, ChosenInds = inds)
 
 # run diem
 \dontrun{
-# diem will store temporal files during EM iterations
+# diem will write temporal files during EM iterations
 # prior to running diem, set the working directory to a location with write permission
 fit <- diem(files = inputFile, ChosenInds = inds, ploidy = ploidies, nCores = 1)
 

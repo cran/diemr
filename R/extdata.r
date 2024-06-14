@@ -16,3 +16,31 @@
 #' @examples
 #' filename <- system.file("extdata", "myotis.vcf", package = "diemr")
 NULL
+
+
+#' Dataset of fish genotypes
+#' 
+#' A subset of single nucleotide polymorphisms in fish for testing purposes of 
+#' multiallelic markers.
+#'
+#' The data is used to test conversion of genotype data from vcf to diem format with 
+#' the function \code{vcf2diem}.
+#' @name testdata
+#' @format vcf file with 92 individuals and 6 markers.
+#' @examples
+#' filename <- system.file("extdata", "testdata.vcf", package = "diemr")
+NULL
+
+
+#' Dataset of butterfly genotypes
+#' 
+#' A subset of single nucleotide polymorphisms in butterflies of the genus \emph{Brenthis}. 
+#'
+#' The data is used to test conversion of genotype data from vcf to diem format with 
+#' function \code{vcf2diem}.
+#' @name brenthis
+#' @format vcf file with 13 individuals and 4 markers.
+#' @examples
+#' filename <- system.file("extdata", "brenthis.vcf", package = "diemr")
+NULL
+

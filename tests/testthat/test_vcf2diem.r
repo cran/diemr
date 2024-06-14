@@ -70,3 +70,20 @@ test_that("incorrect chunk size", {
 	
 
 })
+
+
+test_that("resolve multiallelic markers", {
+     
+     brenthis <- system.file("extdata", "brenthis.vcf", package = "diemr")
+     myotis <- system.file("extdata", "myotis.vcf", package = "diemr")
+     
+     expect_snapshot(
+	     x = vcf2diem(SNP = brenthis, filename = "brenthis.txt", chunk = 1)
+	)
+
+    expect_snapshot(
+	     x = vcf2diem(SNP = myotis, filename = "myotis.txt", chunk = 1)
+	)
+
+
+})

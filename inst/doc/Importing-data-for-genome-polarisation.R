@@ -1,4 +1,4 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#",
@@ -7,14 +7,14 @@ knitr::opts_chunk$set(
   fig.width = 6 
 )
 
-## ---- setup, eval = FALSE-----------------------------------------------------
+## ----setup, eval = FALSE------------------------------------------------------
 #  # Attempt to load a package, if the package was not available, install and load
 #  if(!require("diemr", character.only = TRUE)){
 #      install.packages("diemr", dependencies = TRUE)
 #      library("diemr", character.only = TRUE)
 #  }
 
-## ---- eval = FALSE------------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 #  # Path to the vcf file
 #  inputfile <- system.file("extdata", "myotis.vcf", package = "diemr")
 #  # File name for the output
@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
 #  # If you expect more markers in the file, provide suitable chunk size.
 #  # Done with chunk 1
 
-## ---- eval = FALSE------------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 #  5 8
 #  ind1   AACCTTGG
 #  ind2   TACGATGG
@@ -34,19 +34,19 @@ knitr::opts_chunk$set(
 #  ind4   CACGTTGG
 #  ind5   AACCTTGT
 
-## ---- eval = FALSE------------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 #  Marker1   022_0
 #  Marker4   02020
 #  Marker5   02_00
 #  Marker8   00202
 
-## ---- eval = FALSE------------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 #  S022_0
 #  S02020
 #  S02_00
 #  S00202
 
-## ---- eval = FALSE------------------------------------------------------------
+## ----eval = FALSE-------------------------------------------------------------
 #  # Import the first converted file for all individuals
 #  # and without changing marker polarity
 #  myotis <- importPolarized("myotis-01.txt",
