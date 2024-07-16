@@ -19,7 +19,7 @@ Counts genomic states in one sample.
 }
 \details{
 Summarizes the number of markers that are fixed for an allele in the genome of
-one individual. This is used to construct the I4 matrix in \code{\link{diem}}.
+one individual. This is used to construct the I4 matrix in \link{diem}.
 }
 \examples{
 genotype <- c("0", "0", "_", "2", "1", "0", "1")
@@ -31,5 +31,5 @@ sStateCount(emPolarise(genotype, TRUE))
 # [1] 1 1 2 3
 }
 \seealso{
-\code{\link{emPolarise}} for changing marker polarity.
+\link{emPolarise} for changing marker polarity.
 }

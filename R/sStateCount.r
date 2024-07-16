@@ -8,8 +8,8 @@
 #' @return Numeric vector of length 4 with counts of "_", "0", "1", "2" respectively.
 #'
 #' @details Summarizes the number of markers that are fixed for an allele in the genome of
-#'   one individual. This is used to construct the I4 matrix in \code{\link{diem}}.
-#' @seealso \code{\link{emPolarise}} for changing marker polarity.
+#'   one individual. This is used to construct the I4 matrix in \link{diem}.
+#' @seealso \link{emPolarise} for changing marker polarity.
 #' @export
 #' @examples
 #' genotype <- c("0", "0", "_", "2", "1", "0", "1")

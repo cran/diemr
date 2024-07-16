@@ -9,6 +9,7 @@ diem(
   ploidy = FALSE,
   markerPolarity = FALSE,
   ChosenInds,
+  ChosenSites = "all",
   epsilon = 0.99999,
   verbose = FALSE,
   nCores = parallel::detectCores() - 1,
@@ -26,6 +27,9 @@ the \code{files}.}
 \item{markerPolarity}{\code{FALSE} or list of logical vectors.}
 
 \item{ChosenInds}{numeric vector of indices of individuals to be included in the analysis.}
+
+\item{ChosenSites}{logical vector indicating which sites are to be included in the
+analysis.}
 
 \item{epsilon}{numeric, specifying how much the hypothetical diagnostic markers should
 contribute to the likelihood calculations. Must be in \code{[0,1)}, keeping
@@ -83,12 +87,12 @@ chromosomes, but males only one, and females have no Y chromosomes:
 
 When \code{verbose = TRUE}, \code{diem} will output multiple files with information
 on the iterations of the EM algorithm, including tracking marker polarities and the
-respective likelihood-based diagnostics. See vignette \code{vignette("diem_output",
+respective likelihood-based diagnostics. See vignette \code{vignette("Understanding-genome-polarisation-output-files",
   package = "diemr")} for a detailed explanation of the individual output files.
 }
 \note{
 To ensure that the data input format of the genotype files, ploidies and individual
-selection are readable for \code{diem}, first use \code{\link{CheckDiemFormat}}.
+selection are readable for \code{diem}, first use \link{CheckDiemFormat}.
 Fix all errors, and run \code{diem} only once the checks all passed.
 
 The working directory or a folder optionally specified in the \code{verbose}
@@ -120,5 +124,5 @@ fit2 <- diem(
 }
 }
 \seealso{
-\code{\link{CheckDiemFormat}}
+\link{CheckDiemFormat}
 }

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Natália Martínková" />
 
-<meta name="date" content="2024-06-14" />
+<meta name="date" content="2024-07-16" />
 
 <title>Understanding genome polarisation output files</title>
 
@@ -364,7 +364,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">Understanding genome polarisation output
 files</h1>
 <h4 class="author">Natália Martínková</h4>
-<h4 class="date">2024-06-14</h4>
+<h4 class="date">2024-07-16</h4>
 
 
 <div id="TOC">
@@ -401,14 +401,14 @@ index files</a></li>
 
 <p>Genome polarisation <span class="citation">(Baird et al. 2023)</span>
 uses the <em>diem</em> algorithm to estimate which allele of a single
-nucleotide polymorphic marker belongs to which side of a barrier to
-geneflow based on whole-genome associations. The key result is then the
+nucleotide polymorphic marker belongs to which side of a barrier to gene
+flow based on whole-genome associations. The key result is then the
 <strong>marker polarity</strong> (whether to read the marker as in the
 <em>diem</em> input file or whether to flip the homozygous state labels
 0↔︎2), <strong>marker diagnostic index</strong> (how relevant the marker
-is with respect to the barrier to geneflow), and <strong>marker polarity
-support</strong> (how certain we are regarding whether to flip the state
-labels or not).</p>
+is with respect to the barrier to gene flow), and <strong>marker
+polarity support</strong> (how certain we are regarding whether to flip
+the state labels or not).</p>
 <p>This information is stored in a file
 <em>MarkerDiagnosticsWithOptimalPolarities.txt</em> with columns Marker,
 newPolarity, DI, and Support. However, the <code>diem</code> function
@@ -433,7 +433,7 @@ tab-delimited table with four columns and the number of rows equal to
 the number of markers across all compartments used to run genome
 polarisation with <code>diem</code>. This is the key results file
 identifying the marker relevance with respect to the detected barrier to
-geneflow.</p>
+gene flow.</p>
 <p>The first column <strong>Marker</strong> is an index of the marker
 that is successive in the files as they are ordered in the
 <code>files</code> argument in the <code>diem</code> call. The value in
@@ -450,25 +450,25 @@ individuals. When the newPolarity value for a marker is
 <code>TRUE</code>, the homozygous states need to be flipped 0↔︎2 to
 correctly associate with the barrier sides. In terms of interpretation,
 this means that the allele encoded as 2 in its homozygous state is
-associated with low values of the hybrid index. Which specific alleles
-these are for any marker can be found in the <em>includedSites.txt</em>
-file from the <code>vcf2diem</code>.</p>
+associated with low values of the hybrid index [sic!]. Which specific
+alleles these are for any marker can be found in the
+<em>includedSites.txt</em> file from the <code>vcf2diem</code>.</p>
 <p>The third column <strong>DI</strong> is numeric with values of the
 diagnostic index of the markers as specified in Eq. 20 <span class="citation">(Baird et al. 2023)</span>. The diagnostic index is a
 log likelihood, so its values are always negative. Polarised markers
-with high diagnostic index characterize the barrier to geneflow. Such
+with high diagnostic index characterize the barrier to gene flow. Such
 markers will tend to be fixed for one allele on either side of the
 barrier. Conversely, markers with low diagnostic index will have signal
-orthogonal to the detected barrier to geneflow. They could reflect
+orthogonal to the detected barrier to gene flow. They could reflect
 ancestral genetic variation, standing variation not contributing to the
-barrier to geneflow, or artifacts such as overmerging of repeated motifs
-onto the reference.</p>
+barrier to gene flow, or artifacts such as overmerging of repeated
+motifs onto the reference.</p>
 <p>The fourth column <strong>Support</strong> is numeric and the values
 represent polarity support for the markers as given in Eq. 21 <span class="citation">(Baird et al. 2023)</span>. The support is the gain in
 likelihood when the correct marker 0↔︎2 ‘flipping’ is compared to its
 reverse. High marker support gives confidence that the marker polarity
-reflects the detected barrier to geneflow. In general, markers with high
-diagnostic index tend to also have high support.</p>
+reflects the detected barrier to gene flow. In general, markers with
+high diagnostic index tend to also have high support.</p>
 </div>
 <div id="HI" class="section level2">
 <h2>HIwithOptimalPolarities</h2>
@@ -628,13 +628,13 @@ they are used internally during the analysis. When
 <h2>Iteration-specific graphics</h2>
 <p>The internal <code>ModelOfDiagnostic</code> function implements Eq.
 19 <span class="citation">(Baird et al. 2023)</span> that is the
-powerful tool to detect the most prominent barrier to geneflow in the
+powerful tool to detect the most prominent barrier to gene flow in the
 data. Seeing how individuals become separated on either side of the
 barrier provides insights into the algorithm convergence.</p>
 <div id="warpswitch-files" class="section level3">
 <h3>WarpSwitch files</h3>
 <p>The <em>WarpSwitch.pdf</em> files plot differences in sorted rescaled
-hybrid indices (Eq. 12) used to identify the barrier to geneflow <span class="citation">(Baird et al. 2023)</span>. The <em>WarpSwitch.txt</em>
+hybrid indices (Eq. 12) used to identify the barrier to gene flow <span class="citation">(Baird et al. 2023)</span>. The <em>WarpSwitch.txt</em>
 files then describe what genomic states the ideal diagnostic marker
 would have for all included individuals (Eq. 13), and how the ideal
 4-genomic state count matrix (Eq. 14) would look like for the first ten
@@ -656,7 +656,7 @@ the barrier identified in the WarpSwich files.</p>
 <p>The visualisation in the iteration-specific graphics provide a
 tangible track record of how the theoretical ideals of pure individuals
 and perfectly diagnostic markers contribute to informing on a barrier to
-geneflow in a realistic scenario, where there are no pure individuals
+gene flow in a realistic scenario, where there are no pure individuals
 and no perfectly diagnostic markers.</p>
 </div>
 </div>
@@ -664,14 +664,12 @@ and no perfectly diagnostic markers.</p>
 <h2>The log file</h2>
 <p>The <em>log.txt</em> file provides a human-readable overview of the
 <code>diem</code> iterations. During initialisation stage, the log file
-will list the number of markers and individuals in the analysis run,
-followed by the top seven rows of the <a href="#I4">4-genomic state
-count matrix <span class="math inline">\({}^4\mathbf{I}\)</span></a>
-with null polarisation, correction for small data (Eq. 5), top seven
-rows of the <span class="math inline">\({}^4\mathbf{A}\)</span>, which
-is the <span class="math inline">\({}^4\mathbf{I}\)</span> matrix
-corrected for compartment- and individual-specific ploidies and is used
-to calculate the hybrid index, the top seven rows of the weighted <span class="math inline">\({}^4\mathbf{V}\)</span> matrix (Eq. 16), and the
+will list the number of (chosen) markers and (chosen) individuals in the
+analysis run, followed by the top seven rows of the <a href="#I4">4-genomic state count matrix <span class="math inline">\({}^4\mathbf{I}\)</span></a> with null
+polarisation, correction for small data (Eq. 5), top seven rows of the
+<span class="math inline">\({}^4\mathbf{A}\)</span>, which is the <span class="math inline">\({}^4\mathbf{I}\)</span> matrix corrected for
+compartment- and individual-specific ploidies and is used to calculate
+the hybrid index, the top seven rows of the weighted <span class="math inline">\({}^4\mathbf{V}\)</span> matrix (Eq. 16), and the
 respective log-likelihood values (Eq. 19).</p>
 <p>For subsequent iterations, the log file also quantifies how many
 markers switch polarities between iterations, and shows the

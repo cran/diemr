@@ -91,16 +91,10 @@ diemr::plotPolarized(genotypes = genotypes,
 #               verbose = TRUE)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  # Import each compartment into a list
-#  genotypes2 <- list(importPolarized(file = filepaths2[1],
-#                         changePolarity = res2$markerPolarity[1:3],
-#                         ChosenInds = samples),
-#                    importPolarized(file = filepaths2[2],
-#                         changePolarity = res2$markerPolarity[4:13],
-#                         ChosenInds = samples))
-#  
-#  # Bind compartment genotypes into one matrix
-#  genotypes2 <- Reduce(cbind, genotypes2)
+#  # Import polarized genotypes for all compartments
+#  genotypes2 <- importPolarized(files = filepaths2,
+#                         changePolarity = res2$markerPolarity,
+#                         ChosenInds = samples)
 #  
 #  # Load individual hybrid indices from a stored file
 #  h2 <- unlist(read.table("diagnostics/HIwithOptimalPolarities.txt"))
@@ -110,18 +104,35 @@ diemr::plotPolarized(genotypes = genotypes,
 #                HI = h2[samples])
 
 ## ----echo = FALSE, warning = FALSE,fig.width = 6, fig.height = 4.5, fig.align = 'center'----
-genotypes2 <- Reduce(cbind, list(diemr::importPolarized(file = system.file("extdata", "data7x3.txt", package = "diemr"), 
-                       changePolarity = c(FALSE, TRUE, TRUE), 
-                       ChosenInds = 1:6),
-                  diemr::importPolarized(file = system.file("extdata", "data7x10.txt", package = "diemr"), 
-                       changePolarity = c(T,T,T,T,F,T,T,F,T,T), 
-                       ChosenInds = 1:6)))
-h2 <- c(.53, .217, .571, .39, .35, .85)
+genotypes2 <- diemr::importPolarized(files = c(system.file("extdata", "data7x3.txt", package = "diemr"), 
+                 system.file("extdata", "data7x10.txt", package = "diemr")),
+                       changePolarity = c(FALSE, TRUE, TRUE,T,T,T,T,F,T,T,F,T,T), 
+                       ChosenInds = 1:6)
+h2 <- apply(genotypes2, 1, \(x) diemr::pHetErrOnStateCount(diemr::sStateCount(x)))[1, ]
 diemr::plotPolarized(genotypes = genotypes2,
-              HI = h2)
+              HI = h2, lwd = 2)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  install.packages(package = "diemr_1.3.tar.gz",
+#  # Select a threshold for the top diagnostic markers.
+#  threshold <- quantile(res2$DI$DI, prob = 0.6)
+#  # Create a vector identifying the diagnostic markers at the given threshold
+#  markers <- res2$DI$DI > threshold
+#  # Import only the selected markers
+#  genotypes3 <- importPolarized(files = filepaths2,
+#                         changePolarity = res2$markerPolarity,
+#                         ChosenInds = samples,
+#                         ChosenSites = markers)
+#  # Calculate hybrid index from diagnostic markers
+#  h3 <- apply(genotypes3, 1, FUN = function(x) pHetErrOnStateCount(sStateCount(x)))[1, ]
+#  # Plot diagnostic markers
+#  plotPolarized(genotypes3, h3)
+
+## ----echo = FALSE, warning = FALSE,fig.width = 6, fig.height = 4.5, fig.align = 'center'----
+diemr::plotPolarized(genotypes = genotypes2[, c(TRUE,TRUE,FALSE,TRUE,FALSE,FALSE,FALSE,FALSE,FALSE,TRUE,TRUE,FALSE,FALSE)],
+              HI = c(.3,0,.5,.3,.4,1), lwd = 2)
+
+## ----eval = FALSE-------------------------------------------------------------
+#  install.packages(package = "diemr_1.4.tar.gz",
 #                   repos = NULL, type = "source")
 
 ## ----eval = FALSE-------------------------------------------------------------

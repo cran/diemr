@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotPolarized.r
 \name{plotPolarized}
 \alias{plotPolarized}
-\title{Plots polarized genotypes}
+\title{Plot Polarized Genotypes}
 \usage{
 plotPolarized(
   genotypes,
@@ -17,26 +17,39 @@ plotPolarized(
 \item{HI}{numeric vector of individual hybrid indices with length equal to number
 of rows in \code{genotypes}.}
 
-\item{cols}{vector of four colours, representing missing data, homozygots for
-genotype 0, heterozygots and homozygots for genotype 2.}
+\item{cols}{vector of four colors, representing missing data, homozygotes for
+genotype 0, heterozygotes and homozygotes for genotype 2.}
 
-\item{...}{additional arguments.}
+\item{...}{additional selected arguments passed to \link[graphics]{image} and
+\link[graphics]{axis}.}
 }
 \value{
 No return value, called for side effects. In the default plot, purple and green
-represent side of the barrier to geneflow encoded as \code{0} and \code{2}, respectively,
-yellow shows heterozygots and white missing or undetermined genotypes. Individuals
-are ordered according to the \code{HI}.
+represent sides of the barrier to gene flow encoded as \code{0} and \code{2}, respectively,
+yellow shows heterozygotes and white represents missing or undetermined genotypes.
+Individuals are ordered according to the sorted \code{HI}.
 }
 \description{
 Plots genotypes that can be optionally polarized.
 }
 \details{
-To import and polarize genotypes, use the function \code{\link{importPolarized}}.
+To import and polarize genotypes, use the \link{importPolarized} function.
 
-When using \code{\link{diem}} with argument \code{verbose = TRUE}, hybrid indices,
-\code{HI}, can be found in file 'HIwithOptimalPolarities.txt' in folder 'diagnostics'
-in the working directory.
+When using \link{diem}, hybrid indices,
+\code{HI}, can be found in the file 'HIwithOptimalPolarities.txt'. Alternatively,
+calculate \code{HI} from the polarized genotypes as shown in the examples.
+
+By default, the function plots colored tick marks for individuals, changing the
+color at the steepest change in sorted \code{HI}. The second and fourth colors in
+\code{cols} are used for the tick marks.
+\itemize{
+\item To turn off this feature, use the argument \code{tick = FALSE}.
+\item To use custom tick mark colors, provide a vector of colors for all individuals
+(equal to the number of rows in \code{genotypes}). The \strong{vector of colors must be
+ordered} according to \code{order(HI)}.
+\item To include individual \code{labels} (e.g., accession numbers), provide a character
+vector with the \strong{names in the same order as they are} in the \code{genotypes}.
+}
 }
 \examples{
 gen <- importPolarized(
@@ -45,7 +58,19 @@ gen <- importPolarized(
   ChosenInds = 1:7
 )
 
-h <- c(0.625, 0.5, 0.455, 0.455, 0.227, 0.818, 0.292)
+h <- apply(gen, 1, FUN = function(x) pHetErrOnStateCount(sStateCount(x)))[1, ]
 
 plotPolarized(genotypes = gen, HI = h)
+
+# Incorrect tick color order
+plotPolarized(gen, h, col.ticks = c(rep("purple", 5), "green", "purple"), lwd = 3)
+
+# Correct tick color order
+plotPolarized(gen, h, col.ticks = c(rep("purple", 5), "green", "purple")[order(h)], lwd = 3)
+
+# Correct individual label order 
+plotPolarized(gen, h, labels = c(paste("purple", 1:5), "green 1", "purple 6"), ylab = "")
+}
+\seealso{
+\link{plotMarkerAxis} to add chromosome information to the x axis.
 }

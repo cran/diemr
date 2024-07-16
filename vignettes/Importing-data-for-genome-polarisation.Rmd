@@ -22,7 +22,8 @@ knitr::opts_chunk$set(
 ```
 
 # Quick start
-The package `diemr` provides a function `vcf2diem`, which converts diploid genotypes in a vcf file (optionally, the vcf file can be gzipped) or an `vcfR` object loaded into `R` to a file with format required by `diem`.  To start, load the `diemr` package or install it from CRAN if it is not yet available:
+
+The package `diemr` provides a function `vcf2diem`, which converts diploid genotypes in a vcf file (optionally, the vcf file can be gzipped) to a file with format required by `diem`.  To start, load the `diemr` package or install it from CRAN if it is not yet available:
 
 ```{r, setup, eval = FALSE}
 # Attempt to load a package, if the package was not available, install and load
@@ -47,7 +48,7 @@ vcf2diem(SNP = inputfile, filename = outputfile, chunk = 2)
 # Done with chunk 1
 ```
 
-The `vcf2diem` function processes calls for sites into the `diem` encoding for sites. The site order will be identical to that in the original vcf file (but see chapter [Sites not informative for genome polarisation]). 
+The `vcf2diem` function processes calls for sites into the `diem` encoding for sites. The site order will be identical to that in the original vcf file (but see chapter [Sites not informative for genome polarisation](#informative)). 
 
 
 
@@ -61,15 +62,13 @@ and `U` (symbol "_" is also allowed) is an unknown state that can be a missing g
 
 ## Invariant sites and indels
 
-What logically follows from this description is that genome polarisation is meaningful only for variant sites (markers). Invariant sites will have **low support** and, though they will not change the `diem` outcome, they will slow down convergence and obscure the nature of change between taxa. During `diem` iterations their obscuring effect is removed by rescaling the hybrid indices onto $[0,1]$ 
-
-Including invariant sites in genome polarisation is acceptable, and likely unavoidable. A proportion of truly invariant sites will be mis-diagnosed as variant due to sequencing errors.
+What logically follows from this description is that genome polarisation is meaningful only for variant sites (markers). Invariant sites will have **low support** and, though they will not change the `diem` outcome, they will slow down convergence and obscure the nature of change between taxa. During `diem` iterations their obscuring effect is removed by rescaling the hybrid indices onto $[0,1]$. Including invariant sites in genome polarisation is acceptable, and likely unavoidable. A proportion of truly invariant sites will be mis-diagnosed as variant due to sequencing errors.
 
 At this time, genome polarisation uses variant markers where alleles differ in nucleotide substitutions. Insertions or deletions (indels) are not allowed to be classified among the most frequent alleles in the `vcf2diem` function. 
 
 
 
-## Sites not informative for genome polarisation
+## Sites not informative for genome polarisation {#informative}
 
 Along side invariant sites, some variant sites are also uninformative for genome polarisation. Sites that include only missing data and heterozygous genotypes are unpolarisable. In general applications, one might wish to exclude sites that are only included in a `vcf` due to the presence of a single heterozygous individual. 
 
@@ -153,11 +152,11 @@ Starting from version 1.2.2, `vcf2diem` removes markers that include
 
 1. only missing data and heterozygotes, 
 1. missing data, homozygotes for the most frequent allele and one heterozygote, 
-1. missing data, homozygotes for one ALT allele and one heterozygote.
+1. optionally missing data, homozygotes for one allele and heterozygotes.
 
-We include a list of the removed markers in a bed-like file ending with *-includedSites.txt* in the working directory. The file includes information from columns `CHROM`, `POS`, and `QUAL` for the respective markers, and records the (good practice) **record of genotype encoding**.
+We include a list of the included markers in a bed-like file ending with *-includedSites.txt* in the working directory. The file includes information from columns `CHROM`, `POS`, and `QUAL` for the respective markers, and records the (good practice) **record of genotype encoding**. The file includedLoci.txt must be checked when interpreting polarised markers to ensure correct marker annotation.
 
-We include a list of the removed markers in a bed-like file ending with *-omittedSites.txt* in the working directory. The file includes information from columns `CHROM`, `POS`, and `QUAL` for the respective markers, and provides the reason, why the marker was omitted. **The file omittedLoci.txt must be checked when interpreting polarised markers** to ensure correct marker annotation.
+We include a list of the removed markers in a bed-like file ending with *-omittedSites.txt* in the working directory. The file includes information from columns `CHROM`, `POS`, and `QUAL` for the respective markers, and provides the reason, why the marker was omitted. 
 
 
 

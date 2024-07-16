@@ -4,14 +4,33 @@
 \alias{importPolarized}
 \title{Imports genomic data polarized according to the specification}
 \usage{
-importPolarized(file, changePolarity, ChosenInds)
+importPolarized(
+  files,
+  changePolarity,
+  ChosenInds,
+  ChosenSites = "all",
+  nCores = 1,
+  verbose = FALSE,
+  ...
+)
 }
 \arguments{
-\item{file}{character vector with a single path to a file with genotypes.}
+\item{files}{character vector with paths to files with genotypes.}
 
 \item{changePolarity}{logical vector with length equal to the number of markers.}
 
 \item{ChosenInds}{numeric vector of indices of individuals to be included in the analysis.}
+
+\item{ChosenSites}{logical vector indicating which sites are to be included in the
+analysis.}
+
+\item{nCores}{numeric. Number of cores to be used for parallelisation. Must be
+at most equal to the number of files in the \code{files} argument, and
+\code{nCores = 1} on Windows.}
+
+\item{verbose}{logical whether to show messages on import progress.}
+
+\item{...}{optional numeric vector of \code{compartmentSizes}.}
 }
 \value{
 Returns a character matrix with rows containing individual genotypes and columns
@@ -22,7 +41,7 @@ Reads genotypes from a file and changes marker polarity.
 }
 \details{
 For details on the input data format, check the \code{file} with
-\code{CheckDiemFormat}.
+\link{CheckDiemFormat}.
 
 The \code{changePolarity} argument influences how each marker is imported. Value
 \code{FALSE} means that the marker will be imported as it is saved in the \code{file}. Value
@@ -31,9 +50,10 @@ encoded in the \code{file} as \code{2} will be imported as \code{0}.
 }
 \examples{
 dat <- importPolarized(
-  file = system.file("extdata", "data7x3.txt", package = "diemr"),
+  files = system.file("extdata", "data7x3.txt", package = "diemr"),
   changePolarity = c(FALSE, TRUE, TRUE),
-  ChosenInds = 1:6
+  ChosenInds = 1:6,
+  ChosenSites = "all"
 )
 dat
 #    m1  m2  m3
@@ -45,6 +65,6 @@ dat
 # 6 "2" "2" "_"
 }
 \seealso{
-\code{\link{diem}} for determining appropriate marker polarity with
+\link{diem} for determining appropriate marker polarity with
 respect to a barrier to geneflow.
 }

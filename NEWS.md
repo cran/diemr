@@ -1,3 +1,13 @@
+# diemr 1.4, released 16-07-2024
+
+- Updated reference to vignette `Understanding genome polarisation output files`.
+- Modified `importPolarized` to accept multiple files and a logical vector indicating which sites to import. The file processing is parallelised.
+- Added functions `plotDeFinetti` and `plotMarkerAxis`.
+- Modified `plotPolarized` to show colored tick marks for individuals and to accept selected graphical parameters.
+- Fixed bug in `vcf2diem` when `requireHomozygous = TRUE`.
+- Added `ChosenSites` argument in `diem` that allows to select sites for identifying a barrier to geneflow. Polarity is calculated for all sites, but only `ChosenSites` influence the likelihood in each EM iteration.
+- Updated vignettes to reflect new functionality.
+
 # diemr 1.3, released 14-06-2024
 
 - Fixed bug in `vcf2diem` for multiallelic markers where REF allele is rare.

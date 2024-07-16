@@ -32,4 +32,5 @@ bibentry(bibtype = "Manual",
                    ),
 		 year = year,
 		 note = note,
+		 doi = "10.32614/CRAN.package.diemr",
 		 url = "https://CRAN.R-project.org/package=diemr")
