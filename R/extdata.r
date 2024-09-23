@@ -1,4 +1,4 @@
-#' Dataset of modified genotypes of bats
+#' Dataset of Modified Genotypes of Bats
 #' 
 #' A subset of single nucleotide polymorphisms in \emph{Myotis myotis} from Harazim et al. 
 #' (2021). The genotypes were modified for testing purposes in such a way that markers
@@ -18,7 +18,7 @@
 NULL
 
 
-#' Dataset of fish genotypes
+#' Dataset of Fish Genotypes
 #' 
 #' A subset of single nucleotide polymorphisms in fish for testing purposes of 
 #' multiallelic markers.
@@ -32,7 +32,7 @@ NULL
 NULL
 
 
-#' Dataset of butterfly genotypes
+#' Dataset of Butterfly Genotypes
 #' 
 #' A subset of single nucleotide polymorphisms in butterflies of the genus \emph{Brenthis}. 
 #'

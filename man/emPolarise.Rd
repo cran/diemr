@@ -7,9 +7,9 @@
 emPolarise(origM, changePolarity = TRUE)
 }
 \arguments{
-\item{origM}{character vector of genotypes comprising of _012 encodings.}
+\item{origM}{A character vector of genotypes comprising of _012 encodings.}
 
-\item{changePolarity}{logical scalar, indicating whether to leave the marker as is
+\item{changePolarity}{A logical scalar, indicating whether to leave the marker as is
 (\code{FALSE}) or whether to change its polarity (\code{TRUE}).}
 }
 \value{
@@ -19,7 +19,7 @@ Returns a character vector with polarised markers.
 Changes encodings of genomic markers according to user specification.
 }
 \note{
-Note that \code{\link{diem}} and \code{\link{importPolarized}} accept also a \code{U}
+Note that \link{diem} and \link{importPolarized} accept also a \code{U}
 encoding for an unknown or third allele, but \code{emPolarise} requires all \code{U} to
 be replaced with \verb{_}.
 }

@@ -7,23 +7,23 @@
 #' for all markers, and hybrid indices for all individuals.
 #'
 #'
-#' @param files character vector with paths to files with genotypes.
-#' @param ploidy logical or list of length equal to length of \code{files}. Each element of the list
-#'    contains a numeric vector with ploidy numbers for all individuals specified in
-#'    the \code{files}.
-#' @param markerPolarity \code{FALSE} or list of logical vectors.
-#' @param ChosenInds numeric vector of indices of individuals to be included in the analysis.
-#' @param ChosenSites logical vector indicating which sites are to be included in the
+#' @param files A character vector with paths to files with genotypes.
+#' @param ploidy A logical or a list of length equal to length of \code{files}. Each 
+#'   element of the list
+#'   contains a numeric vector with ploidy numbers for all individuals specified in
+#'   the \code{files}.
+#' @param markerPolarity \code{FALSE} or a list of logical vectors.
+#' @param ChosenInds A numeric vector of indices of individuals to be included in the analysis.
+#' @param ChosenSites A logical vector indicating which sites are to be included in the
 #'    analysis.
-#' @param epsilon numeric, specifying how much the hypothetical diagnostic markers should
+#' @param epsilon A numeric, specifying how much the hypothetical diagnostic markers should
 #' 			contribute to the likelihood calculations. Must be in \code{[0,1)}, keeping
 #'  		tolerance setting of the \code{R} session in mind.
-#' @param verbose logical or character with path to directory where run diagnostics will
+#' @param verbose Logical or character with path to directory where run diagnostics will
 #'    be saved.
-#' @param nCores numeric. Number of cores to be used for parallelisation. Must be
-#'     at most equal to the number of files in the \code{files} argument, and
+#' @param nCores A numeric number of cores to be used for parallelisation. Must be
 #'     \code{nCores = 1} on Windows.
-#' @param maxIterations numeric.
+#' @param maxIterations A numeric.
 #' @param ... additional arguments.
 #' @export
 #' @details  Given two alleles of a marker, one allele can belong to one side of a barrier
@@ -63,6 +63,8 @@
 #'   The working directory or a folder optionally specified in the \code{verbose}
 #'   argument must have write permissions. \code{diem} will store temporary files in the
 #'   location and output results files.
+#'
+#'   The grain for parallelisation is the compartment \code{files}.
 #' @seealso \link{CheckDiemFormat}
 #' @return A list including suggested marker polarities, diagnostic indices and support for all
 #' 		markers, four genomic state counts matrix for all individuals, and polarity changes
@@ -729,7 +731,10 @@ diem <- function(files, ploidy = FALSE, markerPolarity = FALSE, ChosenInds,
       capture.output(round(FlatLogI4[1:min(28, length(FlatLogI4))], 2), file = logfile, append = TRUE)
     }
 
-
+    
+    # memory management
+    invisible(capture.output(gc()))
+    
     # end one iteration
     IterationCount <- IterationCount + 1
   } # end while for cycle limit
@@ -738,7 +743,11 @@ diem <- function(files, ploidy = FALSE, markerPolarity = FALSE, ChosenInds,
   Finalising <- TRUE
   message("Finalising diem output ", Sys.time())
 
-  DI <- summariseDIacrossCompartments(iteration = ExistingLCcandidate[[2]][1] + 1)
+  if(IterationCount > maxIterations){
+    DI <- summariseDIacrossCompartments(iteration = maxIterations)
+  } else {
+    DI <- summariseDIacrossCompartments(iteration = ExistingLCcandidate[[2]][1] + 1)
+  }
   #  I4 <- I4changes[[ExistingLCcandidate[[2]][1] + 1]] - SmallDataI4errorTermChanges[[ExistingLCcandidate[[2]][1] + 1]]
   #  rownames(I4) <- ChosenInds
   #  HI <- HIchanges[[ExistingLCcandidate[[2]][1] + 1]]
@@ -759,7 +768,7 @@ diem <- function(files, ploidy = FALSE, markerPolarity = FALSE, ChosenInds,
   I4compartments <- lapply(I4compartments, FUN = function(x) x[[1]])
   I4 <- Reduce("+", I4compartments)
 
-  A4compartments <- Map("*", I4compartments, ploidy)
+  A4compartments <- Map("*", I4compartments, lapply(ploidy, "[", ChosenInds))
   A4 <- Reduce("+", A4compartments)
 
 

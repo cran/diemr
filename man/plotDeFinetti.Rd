@@ -9,21 +9,18 @@ plotDeFinetti(
   cols,
   HWE = TRUE,
   tipLabels = c("Homozygous 0", "Heterozygous 1", "Homozygous 2"),
-  verbose = FALSE,
   ...
 )
 }
 \arguments{
-\item{genotypes}{character matrix comprising of _012 encodings.}
+\item{genotypes}{A character matrix comprising of _012 encodings.}
 
-\item{cols}{character, vector of colors with a length equal to the number of individuals (rows)
-in \code{genotypes}.}
+\item{cols}{A character vector of colors with a length equal to the number of
+individuals (rows) in \code{genotypes}.}
 
-\item{HWE}{logical indicating whether to plot the curve for Hardy-Weinberg Equilibrium.}
+\item{HWE}{Logical indicating whether to plot the curve for Hardy-Weinberg Equilibrium.}
 
-\item{tipLabels}{character vector of length 3 with names for the ternary plot vertices.}
-
-\item{verbose}{logical whether to show messages on import progress.}
+\item{tipLabels}{A character vector of length 3 with names for the ternary plot vertices.}
 
 \item{...}{additional graphical parameters (see \link[graphics]{plot.default}).}
 }
@@ -38,6 +35,7 @@ diagram and includes a curve indicating Hardy-Weinberg equilibrium if specified.
 }
 \details{
 To import and polarize genotypes, use the \link{importPolarized} function.
+Alternatively, the I4 matrix can be used as input for \code{genotypes}.
 }
 \examples{
 gen <- importPolarized(
@@ -46,5 +44,5 @@ gen <- importPolarized(
   ChosenInds = 1:7
 )
 
-plotDeFinetti(genotypes = gen, cols = palette.colors(nrow(gen), "Accent"), pch = 19)
+plotDeFinetti(gen, cols = palette.colors(nrow(gen), "Accent"), pch = 19)
 }

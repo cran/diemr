@@ -22,11 +22,11 @@ homozygots for allele 2. Individuals in rows.}
 \item{OriginalHI}{numeric vector of length equal to number of rows in \code{I4},
 representing hybrid indices of individuals.}
 
-\item{epsilon}{numeric, specifying how much the hypothetical diagnostic markers should
+\item{epsilon}{A numeric, specifying how much the hypothetical diagnostic markers should
 contribute to the likelihood calculations. Must be in \code{[0,1)}, keeping
 tolerance setting of the \code{R} session in mind.}
 
-\item{verbose}{logical or character with path to directory where run diagnostics will
+\item{verbose}{Logical or character with path to directory where run diagnostics will
 be saved.}
 
 \item{folder}{character specifying path to a folder for the verbose output.}

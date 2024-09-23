@@ -7,11 +7,12 @@
 CheckDiemFormat(files, ChosenInds, ploidy)
 }
 \arguments{
-\item{files}{character vector with paths to files with genotypes.}
+\item{files}{A character vector with paths to files with genotypes.}
 
-\item{ChosenInds}{numeric vector of indices of individuals to be included in the analysis.}
+\item{ChosenInds}{A numeric vector of indices of individuals to be included in the analysis.}
 
-\item{ploidy}{logical or list of length equal to length of \code{files}. Each element of the list
+\item{ploidy}{A logical or a list of length equal to length of \code{files}. Each
+element of the list
 contains a numeric vector with ploidy numbers for all individuals specified in
 the \code{files}.}
 }

@@ -7,7 +7,7 @@
 pHetErrOnStateCount(sCount)
 }
 \arguments{
-\item{sCount}{a numeric vector of length 4 with allele counts for missing data,
+\item{sCount}{A numeric vector of length 4 with allele counts for missing data,
 homozygots for allele 1, heterozygots, and homozygots for allele 2.}
 }
 \value{

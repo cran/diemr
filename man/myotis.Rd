@@ -2,7 +2,7 @@
 % Please edit documentation in R/extdata.r
 \name{myotis}
 \alias{myotis}
-\title{Dataset of modified genotypes of bats}
+\title{Dataset of Modified Genotypes of Bats}
 \format{
 vcf file with 14 individuals and 20 markers.
 }

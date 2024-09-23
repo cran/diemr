@@ -3,12 +3,12 @@
 #' Reads vcf files and writes genotypes of the most frequent alleles based on
 #' chromosome positions to diem format.
 #'
-#' @param SNP character vector with a path to the '.vcf' or '.vcf.gz' file, or an \code{vcfR}
+#' @param SNP A character vector with a path to the '.vcf' or '.vcf.gz' file, or an \code{vcfR}
 #'     object. Diploid data are currently supported.
-#' @param filename character vector with a path where to save the converted genotypes.
-#' @param chunk numeric indicating by how many markers should the result be split into
+#' @param filename A character vector with a path where to save the converted genotypes.
+#' @param chunk Numeric indicating by how many markers should the result be split into
 #'     separate files.
-#' @param requireHomozygous logical whether to require the marker to have at least one
+#' @param requireHomozygous Logical whether to require the marker to have at least one
 #'     homozygous individual for each allele.
 #'
 #' @details Importing vcf files larger than 1GB, and those containing multiallelic

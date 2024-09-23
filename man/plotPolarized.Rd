@@ -12,15 +12,15 @@ plotPolarized(
 )
 }
 \arguments{
-\item{genotypes}{character matrix comprising of _012 encodings.}
+\item{genotypes}{A character matrix comprising of _012 encodings.}
 
-\item{HI}{numeric vector of individual hybrid indices with length equal to number
+\item{HI}{A numeric vector of individual hybrid indices with length equal to number
 of rows in \code{genotypes}.}
 
-\item{cols}{vector of four colors, representing missing data, homozygotes for
+\item{cols}{A vector of four colors, representing missing data, homozygotes for
 genotype 0, heterozygotes and homozygotes for genotype 2.}
 
-\item{...}{additional selected arguments passed to \link[graphics]{image} and
+\item{...}{Additional selected arguments passed to \link[graphics]{image} and
 \link[graphics]{axis}.}
 }
 \value{

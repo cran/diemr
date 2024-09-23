@@ -2,7 +2,7 @@
 % Please edit documentation in R/extdata.r
 \name{brenthis}
 \alias{brenthis}
-\title{Dataset of butterfly genotypes}
+\title{Dataset of Butterfly Genotypes}
 \format{
 vcf file with 13 individuals and 4 markers.
 }

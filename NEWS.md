@@ -1,6 +1,14 @@
+# diemr 1.4.1, release 23-09-2024
+
+- Updated vignette authorship, and a link to a reference. 
+- Fixed error message formatting in `CheckDiemFormat`.
+- Added `rank2map` and `smoothPolarizedGenotypes`.
+- Improved memory handling in `diem`.
+- Fixed exit bug in `diem` when number of iterations reaches `maxIterations`. 
+
 # diemr 1.4, released 16-07-2024
 
-- Updated reference to vignette `Understanding genome polarisation output files`.
+- Updated reference to vignette **Understanding genome polarisation output files**.
 - Modified `importPolarized` to accept multiple files and a logical vector indicating which sites to import. The file processing is parallelised.
 - Added functions `plotDeFinetti` and `plotMarkerAxis`.
 - Modified `plotPolarized` to show colored tick marks for individuals and to accept selected graphical parameters.
@@ -12,7 +20,7 @@
 
 - Fixed bug in `vcf2diem` for multiallelic markers where REF allele is rare.
 - Improved user-flexibility in reporting verbose EM search in `diem`. As a consequence `ModelOfDiagnostic` is no longer exported.
-- Added vignette `Understanding genome polarisation output files`.
+- Added vignette **Understanding genome polarisation output files**.
 - Removed warnings when generating random null polarities.
 - Hybrid indices and the 4-genomic state count matrix I4 are now calculated from the polarised genomes for all individuals. As a result, `diem` now requires ploidies for all individuals in the input files listed in the `files` argument.
 - Set default `ploidy = FALSE` in `diem` that assumes all individuals are diploid across all compartments. 
@@ -28,7 +36,7 @@
 # diemr 1.2.2, released 11-07-2023 
 
 - Modified `vcf2diem` so that markers without homozygous genotypes or markers with only one heterozygous genotype are removed as non-informative for genome polarisation.
-- Updated vignette `Importing data for genome polarisation`.
+- Updated vignette **Importing data for genome polarisation**.
 - Fixed formatting in `vcf2diem` documentation.
 
 
@@ -42,7 +50,7 @@
 
 - Added `vcf2diem` to convert SNP in vcf format to diem genotypes.
 - Added `myotis` vcf dataset with documentation.
-- Added vignette `Importing data for genome polarisation`.
+- Added vignette **Importing data for genome polarisation**.
 - Updated CITATION.
 
 
@@ -94,7 +102,7 @@
 # diemr 0.1.1, build 09-07-2021
 
 - Added tolerance for unknown genotypes encoded either as `_` or `U`.
-- Added vignette `diemr: Diagnostic index expectation maximisation in R`.
+- Added vignette **diemr: Diagnostic index expectation maximisation in R**.
 - Added a `NEWS.md` file to track changes to the package.
 - Added `README.md` with quick start analysis instructions.
 - Added default `ChosenInds` to include all individuals to `diem`. 

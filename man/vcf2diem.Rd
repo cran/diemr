@@ -7,15 +7,15 @@
 vcf2diem(SNP, filename, chunk = 1L, requireHomozygous = TRUE)
 }
 \arguments{
-\item{SNP}{character vector with a path to the '.vcf' or '.vcf.gz' file, or an \code{vcfR}
+\item{SNP}{A character vector with a path to the '.vcf' or '.vcf.gz' file, or an \code{vcfR}
 object. Diploid data are currently supported.}
 
-\item{filename}{character vector with a path where to save the converted genotypes.}
+\item{filename}{A character vector with a path where to save the converted genotypes.}
 
-\item{chunk}{numeric indicating by how many markers should the result be split into
+\item{chunk}{Numeric indicating by how many markers should the result be split into
 separate files.}
 
-\item{requireHomozygous}{logical whether to require the marker to have at least one
+\item{requireHomozygous}{Logical whether to require the marker to have at least one
 homozygous individual for each allele.}
 }
 \value{

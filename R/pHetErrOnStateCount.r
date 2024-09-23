@@ -4,7 +4,7 @@
 #' the hybrid index,
 #' heterozygosity and error rate in a single individual.
 #'
-#' @param sCount a numeric vector of length 4 with allele counts for missing data,
+#' @param sCount A numeric vector of length 4 with allele counts for missing data,
 #'               homozygots for allele 1, heterozygots, and homozygots for allele 2.
 #' @return Returns a named numeric vector with three values: p - hybrid index,
 #'         Het - heterozygosity,

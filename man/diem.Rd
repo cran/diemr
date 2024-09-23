@@ -18,31 +18,31 @@ diem(
 )
 }
 \arguments{
-\item{files}{character vector with paths to files with genotypes.}
+\item{files}{A character vector with paths to files with genotypes.}
 
-\item{ploidy}{logical or list of length equal to length of \code{files}. Each element of the list
+\item{ploidy}{A logical or a list of length equal to length of \code{files}. Each
+element of the list
 contains a numeric vector with ploidy numbers for all individuals specified in
 the \code{files}.}
 
-\item{markerPolarity}{\code{FALSE} or list of logical vectors.}
+\item{markerPolarity}{\code{FALSE} or a list of logical vectors.}
 
-\item{ChosenInds}{numeric vector of indices of individuals to be included in the analysis.}
+\item{ChosenInds}{A numeric vector of indices of individuals to be included in the analysis.}
 
-\item{ChosenSites}{logical vector indicating which sites are to be included in the
+\item{ChosenSites}{A logical vector indicating which sites are to be included in the
 analysis.}
 
-\item{epsilon}{numeric, specifying how much the hypothetical diagnostic markers should
+\item{epsilon}{A numeric, specifying how much the hypothetical diagnostic markers should
 contribute to the likelihood calculations. Must be in \code{[0,1)}, keeping
 tolerance setting of the \code{R} session in mind.}
 
-\item{verbose}{logical or character with path to directory where run diagnostics will
+\item{verbose}{Logical or character with path to directory where run diagnostics will
 be saved.}
 
-\item{nCores}{numeric. Number of cores to be used for parallelisation. Must be
-at most equal to the number of files in the \code{files} argument, and
+\item{nCores}{A numeric number of cores to be used for parallelisation. Must be
 \code{nCores = 1} on Windows.}
 
-\item{maxIterations}{numeric.}
+\item{maxIterations}{A numeric.}
 
 \item{...}{additional arguments.}
 }
@@ -98,6 +98,8 @@ Fix all errors, and run \code{diem} only once the checks all passed.
 The working directory or a folder optionally specified in the \code{verbose}
 argument must have write permissions. \code{diem} will store temporary files in the
 location and output results files.
+
+The grain for parallelisation is the compartment \code{files}.
 }
 \examples{
 # set up input genotypes file names, ploidies and selection of individual samples

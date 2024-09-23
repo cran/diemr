@@ -15,22 +15,21 @@ importPolarized(
 )
 }
 \arguments{
-\item{files}{character vector with paths to files with genotypes.}
+\item{files}{A character vector with paths to files with genotypes.}
 
-\item{changePolarity}{logical vector with length equal to the number of markers.}
+\item{changePolarity}{A logical vector with length equal to the number of markers.}
 
-\item{ChosenInds}{numeric vector of indices of individuals to be included in the analysis.}
+\item{ChosenInds}{A numeric vector of indices of individuals to be included in the analysis.}
 
-\item{ChosenSites}{logical vector indicating which sites are to be included in the
+\item{ChosenSites}{A logical vector indicating which sites are to be included in the
 analysis.}
 
-\item{nCores}{numeric. Number of cores to be used for parallelisation. Must be
-at most equal to the number of files in the \code{files} argument, and
+\item{nCores}{A numeric number of cores to be used for parallelisation. Must be
 \code{nCores = 1} on Windows.}
 
-\item{verbose}{logical whether to show messages on import progress.}
+\item{verbose}{Logical whether to show messages on import progress.}
 
-\item{...}{optional numeric vector of \code{compartmentSizes}.}
+\item{...}{Optional numeric vector of \code{compartmentSizes}.}
 }
 \value{
 Returns a character matrix with rows containing individual genotypes and columns
@@ -66,5 +65,5 @@ dat
 }
 \seealso{
 \link{diem} for determining appropriate marker polarity with
-respect to a barrier to geneflow.
+respect to a barrier to gene flow.
 }

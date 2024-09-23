@@ -2,7 +2,7 @@
 % Please edit documentation in R/extdata.r
 \name{testdata}
 \alias{testdata}
-\title{Dataset of fish genotypes}
+\title{Dataset of Fish Genotypes}
 \format{
 vcf file with 92 individuals and 6 markers.
 }

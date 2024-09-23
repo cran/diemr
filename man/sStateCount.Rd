@@ -7,7 +7,7 @@
 sStateCount(s)
 }
 \arguments{
-\item{s}{character vector with elements "_", "0", "1", "2" representing
+\item{s}{A character vector with elements "_", "0", "1", "2" representing
 missing data, homozygots for allele 1, heterozygots, and
 homozygots for allele 2. The vector should represent a single individual.}
 }

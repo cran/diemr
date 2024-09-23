@@ -46,8 +46,33 @@ test_that("error on ChosenInds", {
 })
 
 
+test_that("Ploidy default", {
+  expect_equal(
+    object = CheckDiemFormat(
+      files = system.file("extdata", "data7x3.txt",
+        package = "diemr"
+      ),
+      ChosenInds = 1:6,
+      ploidy = FALSE
+    ),
+    expected = TRUE
+  )
+})
+
 
 test_that("error on Ploidy", {
+  expect_error(
+    object = CheckDiemFormat(
+      files = system.file("extdata", "data7x3.txt",
+        package = "diemr"
+      ),
+      ChosenInds = 1:6,
+      ploidy = TRUE
+    ),
+    regexp = "Ploidy must be a list"
+  )
+
+
   expect_error(
     object = CheckDiemFormat(
       files = system.file("extdata", "data7x3.txt",
@@ -113,4 +138,5 @@ test_that("error on Ploidy", {
     ),
     regexp = "contain other characters"
   )
+  
 })

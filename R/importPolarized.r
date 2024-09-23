@@ -3,9 +3,9 @@
 #' Reads genotypes from a file and changes marker polarity.
 #'
 #' @inheritParams diem
-#' @param changePolarity logical vector with length equal to the number of markers.
-#' @param verbose logical whether to show messages on import progress.
-#' @param ... optional numeric vector of `compartmentSizes`.
+#' @param changePolarity A logical vector with length equal to the number of markers.
+#' @param verbose Logical whether to show messages on import progress.
+#' @param ... Optional numeric vector of \code{compartmentSizes}.
 #' @details For details on the input data format, check the \code{file} with
 #'   \link{CheckDiemFormat}.
 #'
@@ -16,7 +16,7 @@
 #' @return Returns a character matrix with rows containing individual genotypes and columns
 #'   containing markers.
 #' @seealso \link{diem} for determining appropriate marker polarity with
-#'   respect to a barrier to geneflow.
+#'   respect to a barrier to gene flow.
 #' @export
 #' @examples
 #' dat <- importPolarized(

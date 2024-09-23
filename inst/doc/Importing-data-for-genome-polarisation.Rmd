@@ -1,6 +1,6 @@
 ---
 title: "Importing data for genome polarisation"
-author: "Natália Martínková"
+author: "Natália Martínková, Stuart J.E. Baird"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
@@ -117,7 +117,7 @@ S00202
 
 ### Heterozygotes in DNA sequence alignments
 
-Diploid markers in DNA sequence alignment can be resolved in an analogous way to haploid markers. Heterozygotes in alignments can be identified according to their [IUPAC DNA ambiguity codes](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2865858/table/T1/). For example, code W may represent an accepted heterozygote in Marker 1, where the most frequent alleles are A and T.
+Diploid markers in DNA sequence alignment can be resolved in an analogous way to haploid markers. Heterozygotes in alignments can be identified according to their IUPAC DNA ambiguity codes (see Table 1 in \url{https://doi.org/10.1093/bioinformatics/btq098}). For example, code W may represent an accepted heterozygote in Marker 1, where the most frequent alleles are A and T.
 
 
 ### Variant call format

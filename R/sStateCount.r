@@ -2,7 +2,7 @@
 #'
 #' Counts genomic states in one sample.
 #'
-#' @param s character vector with elements "_", "0", "1", "2" representing
+#' @param s A character vector with elements "_", "0", "1", "2" representing
 #' 			 missing data, homozygots for allele 1, heterozygots, and
 #'           homozygots for allele 2. The vector should represent a single individual.
 #' @return Numeric vector of length 4 with counts of "_", "0", "1", "2" respectively.

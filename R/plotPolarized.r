@@ -1,12 +1,12 @@
 #' Plot Polarized Genotypes
 #'
 #' Plots genotypes that can be optionally polarized.
-#' @param genotypes character matrix comprising of _012 encodings.
-#' @param HI numeric vector of individual hybrid indices with length equal to number
+#' @param genotypes A character matrix comprising of _012 encodings.
+#' @param HI A numeric vector of individual hybrid indices with length equal to number
 #'   of rows in \code{genotypes}.
-#' @param cols vector of four colors, representing missing data, homozygotes for
+#' @param cols A vector of four colors, representing missing data, homozygotes for
 #'    genotype 0, heterozygotes and homozygotes for genotype 2.
-#' @param ... additional selected arguments passed to \link[graphics]{image} and
+#' @param ... Additional selected arguments passed to \link[graphics]{image} and
 #'    \link[graphics]{axis}.
 #' @details To import and polarize genotypes, use the \link{importPolarized} function.
 #'

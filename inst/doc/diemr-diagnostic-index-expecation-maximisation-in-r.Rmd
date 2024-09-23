@@ -1,6 +1,6 @@
 ---
 title: "diemr: Diagnostic index expectation maximisation in R"
-author: "Natália Martínková"
+author: "Natália Martínková, Stuart J.E. Baird"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:

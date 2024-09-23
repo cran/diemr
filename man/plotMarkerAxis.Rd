@@ -13,14 +13,14 @@ plotMarkerAxis(
 )
 }
 \arguments{
-\item{includedSites}{character. Path to a file with columns \code{CHROM} and \code{POS}.}
+\item{includedSites}{A character path to a file with columns \code{CHROM} and \code{POS}.}
 
-\item{ChosenSites}{logical vector indicating which sites are to be included in the
+\item{ChosenSites}{A logical vector indicating which sites are to be included in the
 analysis.}
 
-\item{tickDist}{numeric. Indicates the spacing of physical tick marks along a chromosome.}
+\item{tickDist}{A numeric indicating the spacing of physical tick marks along a chromosome.}
 
-\item{axisInfo}{list with user-defined tick positions and labels for marker axis. See
+\item{axisInfo}{A list with user-defined tick positions and labels for marker axis. See
 Details.}
 
 \item{...}{additional arguments.}

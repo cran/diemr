@@ -7,12 +7,13 @@
 #'
 #' @inheritParams plotPolarized
 #' @inheritParams importPolarized
-#' @param cols character, vector of colors with a length equal to the number of individuals (rows)
-#'   in \code{genotypes}.
-#' @param HWE logical indicating whether to plot the curve for Hardy-Weinberg Equilibrium.
-#' @param tipLabels character vector of length 3 with names for the ternary plot vertices.
+#' @param cols A character vector of colors with a length equal to the number of
+#'   individuals (rows) in \code{genotypes}.
+#' @param HWE Logical indicating whether to plot the curve for Hardy-Weinberg Equilibrium.
+#' @param tipLabels A character vector of length 3 with names for the ternary plot vertices.
 #' @param ... additional graphical parameters (see \link[graphics]{plot.default}).
-#' @details To import and polarize genotypes, use the \link{importPolarized} function.
+#' @details To import and polarize genotypes, use the \link{importPolarized} function. 
+#'   Alternatively, the I4 matrix can be used as input for \code{genotypes}.
 #'
 #' @return No return value; the function is called for its side effects.
 #' @importFrom utils modifyList
@@ -25,10 +26,8 @@
 #'   ChosenInds = 1:7
 #' )
 #'
-#' plotDeFinetti(genotypes = gen, cols = palette.colors(nrow(gen), "Accent"), pch = 19)
-plotDeFinetti <- function(genotypes, cols, HWE = TRUE, tipLabels = c("Homozygous 0", "Heterozygous 1", "Homozygous 2"), verbose = FALSE, ...) {
-
-
+#' plotDeFinetti(gen, cols = palette.colors(nrow(gen), "Accent"), pch = 19)
+plotDeFinetti <- function(genotypes, cols, HWE = TRUE, tipLabels = c("Homozygous 0", "Heterozygous 1", "Homozygous 2"), ...) {
   ######################################
   ## Ternary to cartesian coordinates ##
   ######################################
@@ -41,13 +40,18 @@ plotDeFinetti <- function(genotypes, cols, HWE = TRUE, tipLabels = c("Homozygous
 
   userArgs <- list(...)
 
-  if(verbose) message("Calculating per individual genotype frequencies: ", Sys.time())
-  
-  nMarkers <- rowSums(matrix(genotypes %in% c("0", "1", "2"), nrow = nrow(genotypes)))
-  freq0 <- rowSums(genotypes == "0") / nMarkers
-  freq1 <- rowSums(genotypes == "1") / nMarkers
-  freq2 <- rowSums(genotypes == "2") / nMarkers
-  
+
+	if(ncol(genotypes) == 4){
+	  nMarkers <- rowSums(genotypes[, 2:4])
+	  freq0 <- genotypes[, 2] / nMarkers
+	  freq1 <- genotypes[, 3] / nMarkers
+	  freq2 <- genotypes[, 4] / nMarkers
+	} else {
+      nMarkers <- rowSums(matrix(genotypes %in% c("0", "1", "2"), nrow = nrow(genotypes)))
+      freq0 <- rowSums(genotypes == "0") / nMarkers
+      freq1 <- rowSums(genotypes == "1") / nMarkers
+      freq2 <- rowSums(genotypes == "2") / nMarkers
+    }
 
   if (HWE) {
     p <- seq(0, 1, length.out = 100)
@@ -70,8 +74,7 @@ plotDeFinetti <- function(genotypes, cols, HWE = TRUE, tipLabels = c("Homozygous
   ), userArgs)
 
   # plotting
-  if(verbose) message("Plotting ", Sys.time())
-  
+
   do.call(plot, c(list(x = dat[, 1], y = dat[, 2], type = "n"), plottingArgs))
   if (HWE) {
     lines(hwe, lty = 3, lwd = 0.8, col = "grey")
