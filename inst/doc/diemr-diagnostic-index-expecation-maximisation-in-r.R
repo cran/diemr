@@ -132,7 +132,7 @@ diemr::plotPolarized(genotypes = genotypes2[, c(TRUE,TRUE,FALSE,TRUE,FALSE,FALSE
               HI = c(.3,0,.5,.3,.4,1), lwd = 2)
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  install.packages(package = "diemr_1.4.tar.gz",
+#  install.packages(package = "diemr_1.4.2.tar.gz",
 #                   repos = NULL, type = "source")
 
 ## ----eval = FALSE-------------------------------------------------------------

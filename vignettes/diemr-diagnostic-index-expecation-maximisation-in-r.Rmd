@@ -260,7 +260,7 @@ diemr::plotPolarized(genotypes = genotypes2[, c(TRUE,TRUE,FALSE,TRUE,FALSE,FALSE
 1. **How can I install `diemr` from the source?**
 
 ```{r, eval = FALSE}
-install.packages(package = "diemr_1.4.tar.gz",
+install.packages(package = "diemr_1.4.2.tar.gz",
                  repos = NULL, type = "source")
 ```
 

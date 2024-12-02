@@ -1,3 +1,11 @@
+# diemr 1.4.2
+
+- Updated `rank2mapChr` internal function to be more efficient. It now uses the `Inchworm` algorithm by Stuart J.E. Baird.
+- Modified `rank2map` to allow also a data.frame in the `inclucedSites` argument.
+- Added `vcf2diem` obligatory output of sample names.
+- Changed `smoothPolarizedGenotypes` to return a weighted mode, added corresponding internal functions `truncatedLaplace` and `unbiasedWeightedStateChoice`.
+
+
 # diemr 1.4.1, release 23-09-2024
 
 - Updated vignette authorship, and a link to a reference. 

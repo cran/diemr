@@ -2,14 +2,14 @@
 % Please edit documentation in R/smoothPolarizedGenotypes.r
 \name{smoothPolarizedGenotypes}
 \alias{smoothPolarizedGenotypes}
-\title{Smooths Polarized Genotype States}
+\title{Smooth Polarized Genotype States}
 \usage{
 smoothPolarizedGenotypes(
   genotypes,
   includedSites,
   ChosenSites = "all",
   windows = NULL,
-  windowSize = NULL,
+  windowSize = 250000,
   ...
 )
 }
@@ -22,27 +22,35 @@ smoothPolarizedGenotypes(
 analysis.}
 
 \item{windows}{A two-column numeric matrix with indices of start and end positions for
-windows for all markers indicated by \code{ChosenSites}.}
+windows for all markers indicated by \code{ChosenSites}. If \code{windows = NULL}, the function
+calculates the windows using \link{rank2map}.}
 
 \item{windowSize}{A numeric window size for metric conversion in base-pairs.}
 
-\item{...}{Additional parameters to be passed to \link{rank2map} if \code{windows = NULL}.}
+\item{...}{Additional arguments to be passed to \link{rank2map} if \code{windows = NULL}.}
 }
 \description{
 This function smooths polarized genotype states using a Laplace kernel density estimation.
-It calculates a smoothed version of the genotype states over specified windows.
+It calculates a smoothed version of the genotype states over specified physical extent
+of genomic content around a site. At each
+genomic position, the function returns a weighted mode of the genomic state.
 }
 \details{
-Ensure that \code{ChosenSites} is the same as was used to import polarized genotypes.
+Ensure that \code{ChosenSites} match those used to import polarized genotypes.
 
-The function uses a Laplace kernel to weight the genotype states within a window around each marker position,
-based on physical positions of the markers. The smoothing process accounts for chromosome-level scales.
+The function uses a truncated and scaled Laplace kernel to weight the genotype states
+within a window around each marker position,
+based on physical positions of the markers.
 
-The Laplace kernel density is calculated as:
-\deqn{\frac{1}{2b} \exp\left(\frac{-|x - \mu|}{b}\right)}
-where \eqn{x} is the position, \eqn{\mu} is the center of the kernel, and \eqn{b} is the scale parameter.
-The scale parameter is \eqn{b = 10^{-4} n}, where \eqn{n} is the position of the last
-marker on the chromosome.
+The Laplace kernel weights are calculated for physical positions of the sites centered at
+the site being smoothed as:
+\deqn{\frac{10}{19} \exp\left(\frac{-x}{b}\right),}
+when \eqn{x < 0}, and as:
+\deqn{\frac{10}{19} \exp\left(\frac{x}{b}\right),}
+when \eqn{x \geq 0},
+where \eqn{x} is the position, and \eqn{b} is the scale parameter of the Laplace kernel.
+The scale parameter is equal to:
+\deqn{b = \frac{\text{windowSize}}{2 \ln(20)}.}
 }
 \examples{
  \dontrun{
@@ -57,4 +65,7 @@ marker on the chromosome.
  plotPolarized(gen, h)
  plotPolarized(gen2, h)
  }
+}
+\seealso{
+\link{rank2map}
 }

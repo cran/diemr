@@ -118,7 +118,8 @@ vcf2diem <- function(SNP, filename, chunk = 1L, requireHomozygous = TRUE) {
     # file names for loci positions
     lociFiles <- c(
       paste0(filepath, "-omittedSites.txt"),
-      paste0(filepath, "-includedSites.txt")
+      paste0(filepath, "-includedSites.txt"),
+      paste0(filepath, "-sampleNames.txt")
     )
     # estimate chunk size
     if (chunk < 100) {
@@ -250,11 +251,12 @@ vcf2diem <- function(SNP, filename, chunk = 1L, requireHomozygous = TRUE) {
   origChunk <- outputs[[3]]
   omittedSites <- outputs[[4]][1]
   includedSites <- outputs[[4]][2]
+  sampleNames <- outputs[[4]][3]
 
   # initialize loci placement files
   cat("## Reasons for omitting loci:\n## 1 - Marker has fewer than 2 alleles representing substitutions\n## 2 - Required homozygous individuals for the 2 most frequent alleles are not present\n## 3 - The second most frequent allele is found only in one heterozygous individual\n## 4 - Dataset is invariant for the most frequent allele\n## 5 - Dataset is invariant for the allele listed as the first ALT in the vcf input\nCHROM\tPOS\tQUAL\tREASON\n", file = omittedSites, append = FALSE)
   cat("CHROM\tPOS\tQUAL\tallele0\tallele2\n", file = includedSites, append = FALSE)
-
+  cat("sampleNames\n", file = sampleNames, append = FALSE)
 
 
   ##############################
@@ -313,8 +315,13 @@ vcf2diem <- function(SNP, filename, chunk = 1L, requireHomozygous = TRUE) {
 
     # skip meta information
     while (substr(Marker, 1, 1) == "#") {
+      previousMarker <- Marker
       Marker <- readLines(infile, n = 1)
     }
+    
+    # write sample names
+    previousMarker <- unlist(strsplit(previousMarker, split = "\t"))
+    cat(previousMarker[10:length(previousMarker)], file = sampleNames, sep = "\n", append = TRUE)
 
 
     # read and resolve genotypes
