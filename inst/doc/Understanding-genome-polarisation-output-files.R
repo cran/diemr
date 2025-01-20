@@ -8,13 +8,13 @@ knitr::opts_chunk$set(
 knitr::include_graphics("diemOutput.png")
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  getwd()
+# getwd()
 
 ## ----eval = FALSE-------------------------------------------------------------
-#  nullPolarities <- readLines("folder/NullMarkerPolarities.txt")[-1]
-#  nullPolarities <- lapply(
-#      strsplit(nullPolarities, split = " "),
-#      as.logical
-#  )
-#  diem(..., markerPolarities = nullPolarities)
+# nullPolarities <- readLines("folder/NullMarkerPolarities.txt")[-1]
+# nullPolarities <- lapply(
+#     strsplit(nullPolarities, split = " "),
+#     as.logical
+# )
+# diem(..., markerPolarities = nullPolarities)
 

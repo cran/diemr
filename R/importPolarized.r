@@ -48,7 +48,7 @@ importPolarized <- function(files, changePolarity, ChosenInds, ChosenSites = "al
     }
   
     genotypes <- read.table(file = files[i], as.is = TRUE)
-    if ((nchar(genotypes[1, ]) - 1) < max(ChosenInds)) {
+    if ((nchar(genotypes[1, ]) - 1) < max(ChosenInds, length(ChosenInds))) {
       stop("File ", files[[i]], " contains fewer individuals than the maximum index specified in ChosenInds.")
     }
     # select genotypes for chosen individuals and markers

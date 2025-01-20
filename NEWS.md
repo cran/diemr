@@ -1,4 +1,10 @@
-# diemr 1.4.2
+# diemr 1.4.3, released 20-01-2025
+
+- Updated `vcf2diem` to allow a user-defined minimum number of homozygous individuals, and to allow subsetting the conversion to `ChosenInds`.
+- Updated documentation.
+
+
+# diemr 1.4.2, released 02-12-2024
 
 - Updated `rank2mapChr` internal function to be more efficient. It now uses the `Inchworm` algorithm by Stuart J.E. Baird.
 - Modified `rank2map` to allow also a data.frame in the `inclucedSites` argument.
@@ -6,7 +12,7 @@
 - Changed `smoothPolarizedGenotypes` to return a weighted mode, added corresponding internal functions `truncatedLaplace` and `unbiasedWeightedStateChoice`.
 
 
-# diemr 1.4.1, release 23-09-2024
+# diemr 1.4.1, released 23-09-2024
 
 - Updated vignette authorship, and a link to a reference. 
 - Fixed error message formatting in `CheckDiemFormat`.

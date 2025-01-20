@@ -4,7 +4,13 @@
 \alias{vcf2diem}
 \title{Convert vcf files to diem format}
 \usage{
-vcf2diem(SNP, filename, chunk = 1L, requireHomozygous = TRUE)
+vcf2diem(
+  SNP,
+  filename,
+  chunk = 1L,
+  requireHomozygous = TRUE,
+  ChosenInds = "all"
+)
 }
 \arguments{
 \item{SNP}{A character vector with a path to the '.vcf' or '.vcf.gz' file, or an \code{vcfR}
@@ -15,8 +21,12 @@ object. Diploid data are currently supported.}
 \item{chunk}{Numeric indicating by how many markers should the result be split into
 separate files.}
 
-\item{requireHomozygous}{Logical whether to require the marker to have at least one
-homozygous individual for each allele.}
+\item{requireHomozygous}{A logical or numeric vector indicating whether to require the marker
+to have at least one or more
+homozygous individual(s) for each allele.}
+
+\item{ChosenInds}{A numeric or logical vector of indices of individuals to be included
+in the analysis.}
 }
 \value{
 No value returned, called for side effects.

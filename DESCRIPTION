@@ -1,6 +1,6 @@
 Package: diemr
 Title: Diagnostic Index Expectation Maximisation in R
-Version: 1.4.2
+Version: 1.4.3
 Authors@R: c(
     person(given = "Natalia",
            family = "Martinkova",
@@ -26,9 +26,9 @@ Config/testthat/edition: 3
 Imports: zoo, vcfR
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2024-12-02 10:24:08 UTC; martinkova
+Packaged: 2025-01-20 13:27:28 UTC; martinkova
 Author: Natalia Martinkova [aut, cre] (<https://orcid.org/0000-0003-4556-4363>),
   Stuart Baird [aut] (<https://orcid.org/0000-0002-7144-9919>)
 Maintainer: Natalia Martinkova <martinkova@ivb.cz>
 Repository: CRAN
-Date/Publication: 2024-12-02 10:40:02 UTC
+Date/Publication: 2025-01-20 13:40:02 UTC

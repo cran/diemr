@@ -87,3 +87,46 @@ test_that("resolve multiallelic markers", {
 
 
 })
+
+
+
+test_that("higher number of homozygotes", {
+     
+     brenthis <- system.file("extdata", "brenthis.vcf", package = "diemr")
+     myotis <- system.file("extdata", "myotis.vcf", package = "diemr")
+     
+     expect_snapshot_value(
+	     x = vcf2diem(SNP = brenthis, filename = "brenthis2.txt", chunk = 1, requireHomozygous = 2),
+	     style = "deparse"
+	)
+
+    expect_snapshot_value(
+	     x = vcf2diem(SNP = myotis, filename = "myotis2.txt", chunk = 1, requireHomozygous = 2),
+	     style = "deparse"
+	)
+
+
+})
+
+
+test_that("incorrect ChosenInds", {
+     
+     brenthis <- system.file("extdata", "brenthis.vcf", package = "diemr")
+     myotis <- system.file("extdata", "myotis.vcf", package = "diemr")
+     
+     expect_warning(
+	     object = vcf2diem(SNP = brenthis, filename = "brenthis2.txt", chunk = 1, ChosenInds = 1:20),
+	     regexp = "Converting to diem for all"
+	)
+	
+	     expect_warning(
+	     object = vcf2diem(SNP = brenthis, filename = "brenthis2.txt", chunk = 1, ChosenInds = rep(TRUE, 20)),
+	     regexp = "Converting to diem for all"
+	)
+
+	     expect_warning(
+	     object = vcf2diem(SNP = brenthis, filename = "brenthis2.txt", chunk = 1, ChosenInds = rep(TRUE, 10)),
+	     regexp = "Converting to diem for all"
+	)
+
+})

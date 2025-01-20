@@ -93,7 +93,7 @@ plotPolarized <- function(genotypes, HI, cols = c("#FFFFFF", "#800080", "#FFE500
   acceptedAxisArgs <- c(
     "side", "at", "col.ticks", "labels", "las", "tick", "line",
     "pos", "outer", "font", "lty", "lwd", "lwd.ticks", "hadj", "padj", "gap.axis",
-    "xpd"
+    "xpd", "cex.axis"
   )
   imageArgs <- plottingArgs[names(plottingArgs) %in% acceptedImageArgs]
   axisArgs <- plottingArgs[names(plottingArgs) %in% acceptedAxisArgs]

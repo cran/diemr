@@ -13,7 +13,8 @@
 #'   contains a numeric vector with ploidy numbers for all individuals specified in
 #'   the \code{files}.
 #' @param markerPolarity \code{FALSE} or a list of logical vectors.
-#' @param ChosenInds A numeric vector of indices of individuals to be included in the analysis.
+#' @param ChosenInds A numeric or logical vector of indices of individuals to be included 
+#'   in the analysis.
 #' @param ChosenSites A logical vector indicating which sites are to be included in the
 #'    analysis.
 #' @param epsilon A numeric, specifying how much the hypothetical diagnostic markers should
@@ -51,6 +52,14 @@
 #'   ploidy for the sex chromosomes should be vectors reflecting that females have two X
 #'   chromosomes, but males only one, and females have no Y chromosomes:
 #'   \code{ploidy = list(rep(2, 3), c(1, 2, 2), c(1, 0, 0))}.
+#'
+#'   When a subset of individuals is used to inform the genome polarisation in the 
+#'   \code{ChosenInds} argument, \code{ploidy} must still be provided for all individuals 
+#'   included in the \code{files}. 
+#'
+#'   \code{ChosenInds} should preferably be numeric values within the range from 1 to the 
+#'   number of individuals in the \code{files}. Logical vectors must have a length equal  
+#'   to the number of individuals in the \code{files}.
 #'
 #'   When \code{verbose = TRUE}, \code{diem} will output multiple files with information
 #'   on the iterations of the EM algorithm, including tracking marker polarities and the
@@ -103,7 +112,9 @@ diem <- function(files, ploidy = FALSE, markerPolarity = FALSE, ChosenInds,
                  maxIterations = 50, ...) {
   if (is.na(nCores)) nCores <- 1
   if (nCores > parallel::detectCores()) nCores <- parallel::detectCores()
-
+  if(inherits(ChosenInds, "logical")){
+    ChosenInds <- which(ChosenInds)
+  }
 
   ###################################
   # prepare diagnostics folder

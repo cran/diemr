@@ -19,7 +19,8 @@ importPolarized(
 
 \item{changePolarity}{A logical vector with length equal to the number of markers.}
 
-\item{ChosenInds}{A numeric vector of indices of individuals to be included in the analysis.}
+\item{ChosenInds}{A numeric or logical vector of indices of individuals to be included
+in the analysis.}
 
 \item{ChosenSites}{A logical vector indicating which sites are to be included in the
 analysis.}

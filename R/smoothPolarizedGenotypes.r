@@ -21,10 +21,11 @@
 #' The Laplace kernel weights are calculated for physical positions of the sites centered at
 #' the site being smoothed as:
 #' \deqn{\frac{10}{19} \exp\left(\frac{-x}{b}\right),}
-#' when \eqn{x < 0}, and as:
+#' when \eqn{x < 0}, meaning that the site \eqn{x} is upstream of the site being smoothed, and as:
 #' \deqn{\frac{10}{19} \exp\left(\frac{x}{b}\right),}
-#' when \eqn{x \geq 0},
-#' where \eqn{x} is the position, and \eqn{b} is the scale parameter of the Laplace kernel.
+#' when \eqn{x \geq 0}, meaning that the site is downstream.
+#' The value \eqn{x} is the position of a neighbouring site relative to the site being
+#' smoothed, and \eqn{b} is the scale parameter of the Laplace kernel.
 #' The scale parameter is equal to:
 #' \deqn{b = \frac{\text{windowSize}}{2 \ln(20)}.}
 #' 
