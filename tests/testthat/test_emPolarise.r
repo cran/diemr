@@ -1,4 +1,3 @@
-
 test_that("error on data type of origM in emPolarise", {
   expect_error(
     object = emPolarise(origM = c(0, 10, 10, 10)),

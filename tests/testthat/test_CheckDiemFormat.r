@@ -1,5 +1,3 @@
-
-
 test_that("error on file names", {
   expect_error(
     object = CheckDiemFormat(
@@ -138,5 +136,4 @@ test_that("error on Ploidy", {
     ),
     regexp = "contain other characters"
   )
-  
 })

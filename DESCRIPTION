@@ -1,6 +1,6 @@
 Package: diemr
 Title: Diagnostic Index Expectation Maximisation in R
-Version: 1.4.3
+Version: 1.5
 Authors@R: c(
     person(given = "Natalia",
            family = "Martinkova",
@@ -20,15 +20,16 @@ Description: Likelihood-based genome polarisation finds which alleles of genomic
 BugReports: https://github.com/StuartJEBaird/diem/issues
 License: GPL (>= 3)
 Encoding: UTF-8
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Suggests: testthat (>= 3.0.0), knitr, rmarkdown
 Config/testthat/edition: 3
-Imports: zoo, vcfR
+Imports: zoo, vcfR, data.table, circlize
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2025-01-20 13:27:28 UTC; martinkova
-Author: Natalia Martinkova [aut, cre] (<https://orcid.org/0000-0003-4556-4363>),
-  Stuart Baird [aut] (<https://orcid.org/0000-0002-7144-9919>)
+Packaged: 2025-09-11 11:13:26 UTC; martinkova
+Author: Natalia Martinkova [aut, cre] (ORCID:
+    <https://orcid.org/0000-0003-4556-4363>),
+  Stuart Baird [aut] (ORCID: <https://orcid.org/0000-0002-7144-9919>)
 Maintainer: Natalia Martinkova <martinkova@ivb.cz>
 Repository: CRAN
-Date/Publication: 2025-01-20 13:40:02 UTC
+Date/Publication: 2025-09-11 11:30:11 UTC

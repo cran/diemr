@@ -1,4 +1,3 @@
-
 test_that("error on arguments in importPolarized", {
   expect_error(
     object = importPolarized(
@@ -23,9 +22,8 @@ test_that("error on arguments in importPolarized", {
 
 
 test_that("correct solution of importPolarized", {
-  
   local_edition(3)
-  
+
   expect_equal(
     object = importPolarized(
       files = system.file("extdata", "data7x3.txt", package = "diemr"),
@@ -80,13 +78,14 @@ test_that("correct dimnames in importPolarized", {
       ChosenInds = c(1:2, 4:6),
       ChosenSites = "all"
     ),
-    expected = matrix(c(
-      "2", "2", "1", "0", "0",
-      "1", "0", "2", "2", "2",
-      "2", "0", "0", "1", "_"
-    ),
-    ncol = 3,
-    dimnames = list(c("1", "2", "4", "5", "6"), c("m1", "m2", "m3"))
+    expected = matrix(
+      c(
+        "2", "2", "1", "0", "0",
+        "1", "0", "2", "2", "2",
+        "2", "0", "0", "1", "_"
+      ),
+      ncol = 3,
+      dimnames = list(c("1", "2", "4", "5", "6"), c("m1", "m2", "m3"))
     )
   )
 
@@ -97,32 +96,34 @@ test_that("correct dimnames in importPolarized", {
       ChosenInds = c(1, 4, 2, 3, 6, 5),
       ChosenSites = "all"
     ),
-    expected = matrix(c(
-      "2", "1", "2", "1", "0", "0",
-      "1", "2", "0", "1", "2", "2",
-      "2", "0", "0", "0", "_", "1"
-    ),
-    ncol = 3,
-    dimnames = list(c("1", "4", "2", "3", "6", "5"), c("m1", "m2", "m3"))
+    expected = matrix(
+      c(
+        "2", "1", "2", "1", "0", "0",
+        "1", "2", "0", "1", "2", "2",
+        "2", "0", "0", "0", "_", "1"
+      ),
+      ncol = 3,
+      dimnames = list(c("1", "4", "2", "3", "6", "5"), c("m1", "m2", "m3"))
     )
   )
-  
-    expect_equal(
+
+  expect_equal(
     object = importPolarized(
-      files = c(system.file("extdata", "data7x3.txt", package = "diemr"),
-                system.file("extdata", "data7x10.txt", package = "diemr")),
+      files = c(
+        system.file("extdata", "data7x3.txt", package = "diemr"),
+        system.file("extdata", "data7x10.txt", package = "diemr")
+      ),
       changePolarity = c(TRUE, rep(FALSE, 12)),
       ChosenInds = c(1, 5),
       ChosenSites = c(TRUE, FALSE, FALSE, TRUE, rep(FALSE, 9))
     ),
-    expected = matrix(c(
-      "2", "0", 
-      "1", "2"      
-    ),
-    ncol = 2,
-    dimnames = list(c("1", "5"), c("m1", "m4"))
+    expected = matrix(
+      c(
+        "2", "0",
+        "1", "2"
+      ),
+      ncol = 2,
+      dimnames = list(c("1", "5"), c("m1", "m4"))
     )
   )
-
-  
 })

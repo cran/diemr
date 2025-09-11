@@ -157,9 +157,9 @@ vcf2diem <- function(SNP, filename, chunk = 1L, requireHomozygous = TRUE, Chosen
     # attempt to resolve sites with indels in REF and ALT
     INFO[, 4] <- sub("\\*|\\.", "AA", INFO[, 4])
     INFO[, 5] <- sub("\\*|\\.", "AA", INFO[, 5])
-    ALLELES <- apply(INFO[, 4:5, drop = FALSE], 1, FUN = \(x) paste(x[1], x[2], sep = ","))
+    ALLELES <- apply(INFO[, 4:5, drop = FALSE], 1, FUN = function(x) { paste(x[1], x[2], sep = ",") } )
     resolvable <- lapply(strsplit(ALLELES, ",", fixed = TRUE),
-      FUN = \(x) which(nchar(x) == 1) - 1 # allele numbers, not indices; removes allele numbers for indels
+      FUN = function(x) { which(nchar(x) == 1) - 1 } # allele numbers, not indices; removes allele numbers for indels
     )
     resolvable[lengths(resolvable) <= 1] <- NA # sets markers as not resolvable if less than 2 substitutions remain
     reason <- 1

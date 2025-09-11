@@ -2,15 +2,27 @@
 % Please edit documentation in R/internal.r
 \name{unbiasedWeightedStateChoice}
 \alias{unbiasedWeightedStateChoice}
-\title{Selects weighted mode of the genomic state}
+\title{Select the weighted mode of genomic states}
 \usage{
 unbiasedWeightedStateChoice(genomicStates, laplaceWeights)
 }
 \arguments{
-\item{genomicStates}{A character vector of genomic states in a given interval}
+\item{genomicStates}{A character vector of genomic states.}
 
-\item{laplaceWeights}{A numeric vector of weights}
+\item{laplaceWeights}{A numeric vector of weights.}
+}
+\value{
+A character representing the most probable genomic state.
 }
 \description{
-Selects weighted mode of the genomic state
+Determines the most frequent genomic state in a given interval, weighted by Laplace-scaled probabilities.
 }
+\details{
+In case of ties, states are ranked by:
+\enumerate{
+\item Total sum of weights (higher is preferred).
+\item Highest single weight assigned to any occurrence of the state (higher is preferred).
+\item Lexicographic order (earlier in the alphabet is preferred).
+}
+}
+\keyword{internal}

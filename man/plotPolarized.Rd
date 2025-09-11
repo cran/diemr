@@ -8,48 +8,88 @@ plotPolarized(
   genotypes,
   HI,
   cols = c("#FFFFFF", "#800080", "#FFE500", "#008080"),
+  type = "rectangle",
+  showProgress = FALSE,
+  addMarkerAxis = FALSE,
   ...
 )
 }
 \arguments{
-\item{genotypes}{A character matrix comprising of _012 encodings.}
+\item{genotypes}{A character matrix with _012 encoding of genotypes. Rows represent
+individuals, columns represent markers.}
 
-\item{HI}{A numeric vector of individual hybrid indices with length equal to number
-of rows in \code{genotypes}.}
+\item{HI}{A numeric vector of hybrid indices, one per individual (row in
+\code{genotypes}).}
 
-\item{cols}{A vector of four colors, representing missing data, homozygotes for
-genotype 0, heterozygotes and homozygotes for genotype 2.}
+\item{cols}{A vector of four colors representing: missing data, homozygotes for 0,
+heterozygotes, and homozygotes for 2 (in that order).}
 
-\item{...}{Additional selected arguments passed to \link[graphics]{image} and
-\link[graphics]{axis}.}
+\item{type}{Character string specifying the layout of the plot. Accepted values are
+\code{"rectangle"}, \code{"iris"}, or \code{"circular"}. Partial matching is allowed.}
+
+\item{showProgress}{Logical. If \code{TRUE}, prints a percentage indicator as individuals
+are plotted (applies only to iris plots).}
+
+\item{addMarkerAxis}{Logical. If \code{TRUE}, a default marker axis is added below the
+genotype matrix (in rectangular layout) or as a radial axis (in circular layout).
+Requires either \code{includedSites} or \code{axisInfo}. For full customization of the
+axis (e.g., styling, label orientation), use \code{plotMarkerAxis} manually.}
+
+\item{...}{Additional arguments passed to internal plotting functions. See Details.}
 }
 \value{
-No return value, called for side effects. In the default plot, purple and green
-represent sides of the barrier to gene flow encoded as \code{0} and \code{2}, respectively,
-yellow shows heterozygotes and white represents missing or undetermined genotypes.
-Individuals are ordered according to the sorted \code{HI}.
+No return value. Called for its side effects - a visual plot of polarized genotypes.
+In the default color scheme:
+\itemize{
+\item Purple and teal represent homozygotes (\code{0} and \code{2}),
+\item Yellow represents heterozygotes (\code{1}),
+\item White indicates missing or undetermined genotypes (\verb{_}).
+Individuals are ordered by increasing \code{HI} (bottom up in rectangular plots and
+inside out in circular plots).
+}
 }
 \description{
-Plots genotypes that can be optionally polarized.
+Plots genotypes that can be optionally polarized and visualized as either a rectangular
+or circular (iris-style) plot.
 }
 \details{
-To import and polarize genotypes, use the \link{importPolarized} function.
+To import and polarize genotypes, use \link{importPolarized}.
 
-When using \link{diem}, hybrid indices,
-\code{HI}, can be found in the file 'HIwithOptimalPolarities.txt'. Alternatively,
-calculate \code{HI} from the polarized genotypes as shown in the examples.
+When using \link{diem}, the hybrid indices (\code{HI}) are saved in the file
+\code{"HIwithOptimalPolarities.txt"}. Alternatively, you can compute \code{HI} directly
+from polarized genotypes (see Examples).
 
-By default, the function plots colored tick marks for individuals, changing the
-color at the steepest change in sorted \code{HI}. The second and fourth colors in
-\code{cols} are used for the tick marks.
+By default, the function plots colored tick marks for individuals, with a color change at
+the steepest hybrid index gradient. The second and fourth colors in \code{cols} are used
+for these ticks. You can:
 \itemize{
-\item To turn off this feature, use the argument \code{tick = FALSE}.
-\item To use custom tick mark colors, provide a vector of colors for all individuals
-(equal to the number of rows in \code{genotypes}). The \strong{vector of colors must be
-ordered} according to \code{order(HI)}.
-\item To include individual \code{labels} (e.g., accession numbers), provide a character
-vector with the \strong{names in the same order as they are} in the \code{genotypes}.
+\item Disable the ticks using \code{tick = FALSE},
+\item Provide a vector of tick colors (must match the number of individuals),
+\strong{ordered according to \code{order(HI)}},
+\item Provide individual \code{labels} (e.g., accession numbers) in the same order as the
+rows in \code{genotypes}.
 }
+
+If \code{addMarkerAxis = TRUE}, you must also supply either:
+\itemize{
+\item \code{includedSites} — a file path containing columns \code{CHROM} and \code{POS}, or
+\item \code{axisInfo} — a precomputed axis information list, as described in
+\code{\link{plotMarkerAxis}}.
+}
+
+Additional graphical parameters are passed to internal calls to \code{image()},
+\code{axis()}, and \code{plotMarkerAxis()}. The following arguments are supported:
+
+\strong{Image arguments:} \code{zlim}, \code{xlim}, \code{ylim}, \code{add}, \code{xaxs},
+\code{yaxs}, \code{xlab}, \code{ylab}, \code{breaks}, \code{useRaster}, \code{asp},
+\code{cex}, \code{cex.lab}, \code{cex.main}, \code{cex.sub}, \code{axes},
+\code{col.axis}, \code{cex.axis}, \code{family}, \code{font}, \code{font.axis},
+\code{font.lab}, \code{font.main}, \code{font.sub}, \code{lab}, \code{xpd}.
+
+\strong{Axis arguments:} \code{side}, \code{at}, \code{col.ticks}, \code{labels},
+\code{las}, \code{tick}, \code{line}, \code{pos}, \code{outer}, \code{font},
+\code{lty}, \code{lwd}, \code{lwd.ticks}, \code{hadj}, \code{padj}, \code{gap.axis},
+\code{xpd}, \code{cex.axis}.
 }
 \examples{
 gen <- importPolarized(
@@ -68,9 +108,11 @@ plotPolarized(gen, h, col.ticks = c(rep("purple", 5), "green", "purple"), lwd = 
 # Correct tick color order
 plotPolarized(gen, h, col.ticks = c(rep("purple", 5), "green", "purple")[order(h)], lwd = 3)
 
-# Correct individual label order 
-plotPolarized(gen, h, labels = c(paste("purple", 1:5), "green 1", "purple 6"), ylab = "")
+# Correct individual label order
+plotPolarized(gen, h, labels = c(paste("purple", 1:5), "green 1", "purple 6"))
+plotPolarized(gen, h, labels = c(paste("purple", 1:5), "green 1", "purple 6"), type = "iris")
 }
 \seealso{
-\link{plotMarkerAxis} to add chromosome information to the x axis.
+\link{plotMarkerAxis} for adding chromosome information as a custom
+axis to the rectangle genotype plot.
 }

@@ -1,3 +1,14 @@
+# diemr 1.5
+
+- Added iris plots to the `plotPolarized`.
+- Updated internal function `markerAxis` to avoid plotting multiple tick labels over one another.
+- Updated `plotMarkerAxis` to check the expected user input.
+- Added `variantSites` function that selects sites with required number of homozygous genotypes in a subset of individuals.
+- Removed function shorthand `\(x)` syntax.
+- Updated `plotPolarized` to unlist and unname the values in `HI`.
+- Updated documentation.
+
+
 # diemr 1.4.3, released 20-01-2025
 
 - Updated `vcf2diem` to allow a user-defined minimum number of homozygous individuals, and to allow subsetting the conversion to `ChosenInds`.

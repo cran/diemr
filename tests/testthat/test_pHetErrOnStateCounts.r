@@ -1,5 +1,3 @@
-
-
 test_that("error on data type of sCount", {
   expect_error(
     object = pHetErrOnStateCount(sCount = c("a", 10, 10, 10)),

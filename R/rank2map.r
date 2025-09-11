@@ -70,7 +70,7 @@ rank2map <- function(includedSites, ChosenSites = "all", windowSize = 1e+07, nCo
   res <- parallel::mclapply(
     X = iChrom, 
     mc.cores = nCores,
-    FUN = \(x) rank2mapChr(x = bed$POS[as.numeric(x)], windowSize = windowSize)
+    FUN = function(x) { rank2mapChr(x = bed$POS[as.numeric(x)], windowSize = windowSize) }
   )
   
   res = Map("+", res, cumsum(CHROMlengths[-length(CHROMlengths)]) - 1)

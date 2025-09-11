@@ -1,10 +1,10 @@
-
 test_that("correct solution in ModelOfDiagnostics", {
-  I4 <- t(apply(importPolarized(
-    system.file("extdata", "data7x10.txt", package = "diemr"),
-    rep(FALSE, 10), 1:7
-  ),
-  MARGIN = 1, FUN = sStateCount
+  I4 <- t(apply(
+    importPolarized(
+      system.file("extdata", "data7x10.txt", package = "diemr"),
+      rep(FALSE, 10), 1:7
+    ),
+    MARGIN = 1, FUN = sStateCount
   ))
 
   expect_equal(

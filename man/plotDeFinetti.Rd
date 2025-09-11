@@ -13,7 +13,8 @@ plotDeFinetti(
 )
 }
 \arguments{
-\item{genotypes}{A character matrix comprising of _012 encodings.}
+\item{genotypes}{A character matrix with _012 encoding of genotypes. Rows represent
+individuals, columns represent markers.}
 
 \item{cols}{A character vector of colors with a length equal to the number of
 individuals (rows) in \code{genotypes}.}

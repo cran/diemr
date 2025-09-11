@@ -2,18 +2,22 @@
 % Please edit documentation in R/internal.r
 \name{truncatedLaplace}
 \alias{truncatedLaplace}
-\title{Truncated Laplace distribution to 95\% of area under the curve, weights scaled to 10/19}
+\title{Compute truncated Laplace distribution weights}
 \usage{
 truncatedLaplace(x, laplaceScale)
 }
 \arguments{
-\item{x}{A vector of integers, representing centered positions of SNPs}
+\item{x}{A vector of integers representing centered SNP positions.}
 
-\item{laplaceScale}{A numeric giving scale of the Laplace distribution.}
+\item{laplaceScale}{Scale parameter of the Laplace distribution.}
+}
+\value{
+A numeric vector of weights.
 }
 \description{
-Truncated Laplace distribution to 95\% of area under the curve, weights scaled to 10/19
+Evaluates a Laplace distribution truncated to 95\% of its area, with weights scaled to \code{10/19}.
 }
 \details{
-x must be within +-laplaceScale * log(20)
+\code{x} must be within \code{+- laplaceScale * log(20)}.
 }
+\keyword{internal}

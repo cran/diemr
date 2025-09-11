@@ -486,7 +486,7 @@ diem <- function(files, ploidy = FALSE, markerPolarity = FALSE, ChosenInds,
     toBeCompartmentalized = ChosenSites
   )
 
-  nOmittedSitesPerCompartment <- lapply(ChosenSites, FUN = \(x) c(sum(!x), 0, 0, 0))
+  nOmittedSitesPerCompartment <- lapply(ChosenSites, FUN = function(x) { c(sum(!x), 0, 0, 0) })
 
 
 

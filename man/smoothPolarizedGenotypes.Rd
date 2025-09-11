@@ -14,7 +14,8 @@ smoothPolarizedGenotypes(
 )
 }
 \arguments{
-\item{genotypes}{A character matrix comprising of _012 encodings.}
+\item{genotypes}{A character matrix with _012 encoding of genotypes. Rows represent
+individuals, columns represent markers.}
 
 \item{includedSites}{A character path to a file with columns \code{CHROM} and \code{POS}.}
 
