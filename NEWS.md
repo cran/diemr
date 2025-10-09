@@ -1,4 +1,12 @@
-# diemr 1.5
+# diemr 1.5.1, released 09-10-2025
+
+- Added `hybridIndex` function that returns a numeric vector suitable for plotting.
+- Modified `vcf2diem` to optionally output site location in BED format.
+- Updated DESCRIPTION (Title, Description, BugReports, URL).
+- Updated documentation.
+
+
+# diemr 1.5, released 11-09-2025
 
 - Added iris plots to the `plotPolarized`.
 - Updated internal function `markerAxis` to avoid plotting multiple tick labels over one another.

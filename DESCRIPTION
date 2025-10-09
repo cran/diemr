@@ -1,6 +1,7 @@
 Package: diemr
-Title: Diagnostic Index Expectation Maximisation in R
-Version: 1.5
+Title: Genome Polarization via Diagnostic Index Expectation
+        Maximization
+Version: 1.5.1
 Authors@R: c(
     person(given = "Natalia",
            family = "Martinkova",
@@ -12,12 +13,15 @@ Authors@R: c(
            role = c("aut"),
            email = "stuartj.e.baird@gmail.com",
            comment = c(ORCID = "0000-0002-7144-9919")))
-Description: Likelihood-based genome polarisation finds which alleles of genomic markers 
-    belong to which side of the barrier. 
-	Co-estimates which individuals belong to either side of the barrier and barrier strength.
-	Uses expectation maximisation in likelihood framework. The method is described in 
-	Baird et al. (2023) <doi:10.1111/2041-210X.14010>.
-BugReports: https://github.com/StuartJEBaird/diem/issues
+Description: Implements a likelihood-based method for genome polarization, identifying
+    which alleles of SNV markers belong to either side of a barrier to gene flow. The
+    approach co-estimates individual assignment, barrier strength, and divergence between
+    sides, with direct application to studies of hybridization. Includes VCF-to-diem
+    conversion and input checks, support for mixed ploidy and parallelization, and tools
+    for visualization and diagnostic outputs. Based on diagnostic index expectation
+    maximization as described in Baird et al. (2023) <doi:10.1111/2041-210X.14010>.
+BugReports: https://github.com/nmartinkova/diemr/issues
+URL: https://nmartinkova.github.io/genome-polarisation/
 License: GPL (>= 3)
 Encoding: UTF-8
 RoxygenNote: 7.3.3
@@ -26,10 +30,10 @@ Config/testthat/edition: 3
 Imports: zoo, vcfR, data.table, circlize
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2025-09-11 11:13:26 UTC; martinkova
+Packaged: 2025-10-09 08:09:54 UTC; martinkova
 Author: Natalia Martinkova [aut, cre] (ORCID:
     <https://orcid.org/0000-0003-4556-4363>),
   Stuart Baird [aut] (ORCID: <https://orcid.org/0000-0002-7144-9919>)
 Maintainer: Natalia Martinkova <martinkova@ivb.cz>
 Repository: CRAN
-Date/Publication: 2025-09-11 11:30:11 UTC
+Date/Publication: 2025-10-09 09:00:02 UTC
