@@ -1,3 +1,15 @@
+# diemr 1.5.2, released 11-12-2025
+
+- Integrated BED-format support into internal functions.
+- Fixed bug in `rank2map` when a chromosome had only one site.
+- Added default value of 0.5 to `hybridIndex` when there are no data.
+- Added ploidy-aware hybrid index calculation to `hybridIndex`.
+- Modified `vcf2diem` to write all sites into one file when `chunk = 1L`, allow minimum number of required genotyped individuals per site, and subset *sampleNames.txt* to `ChosenInds` only.
+- Added check for the `changePolarity` argument in `importPolarized`.
+- Added internal function `resolveChosenInds`.
+- Updated README.
+
+
 # diemr 1.5.1, released 09-10-2025
 
 - Added `hybridIndex` function that returns a numeric vector suitable for plotting.

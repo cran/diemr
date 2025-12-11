@@ -18,6 +18,26 @@ test_that("error on arguments in importPolarized", {
     ),
     regexp = "contains fewer individuals"
   )
+
+  expect_error(
+    object = importPolarized(
+      files = system.file("extdata", "data7x3.txt", package = "diemr"),
+      changePolarity = c(0, 1, 0),
+      ChosenInds = 1:6,
+      ChosenSites = "all"
+    ),
+    regexp = "must be a logical vector or a list of logical vectors"
+  )
+
+  expect_error(
+    object = importPolarized(
+      files = system.file("extdata", "data7x3.txt", package = "diemr"),
+      changePolarity = list(c(TRUE, FALSE, "x")),
+      ChosenInds = 1:6,
+      ChosenSites = "all"
+    ),
+    regexp = "must be a logical vector or a list of logical vectors"
+  )
 })
 
 
@@ -66,6 +86,20 @@ test_that("correct solution of importPolarized", {
       "2", "0", "0", "0", "1", "_"
     ), ncol = 3),
     ignore_attr = TRUE
+  )
+
+
+  expect_equal(
+    object = importPolarized(system.file("extdata", "data7x3.txt", package = "diemr"),
+      changePolarity = rep(TRUE, 3),
+      ChosenInds = 1:3,
+      simplify = FALSE
+    ),
+    expected = list(matrix(c(
+      "2", "1", "2",
+      "2", "0", "0",
+      "1", "1", "0"
+    ), ncol = 3, byrow = TRUE))
   )
 })
 

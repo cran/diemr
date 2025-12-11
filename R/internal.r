@@ -14,6 +14,9 @@ sImport <- function(file, ChosenInds = "all") {
   genotypes <- data.table::fread(file = file, header = FALSE, colClasses = "character")[[1]]
   genotypes <- do.call(cbind, lapply(genotypes, function(x) strsplit(x, "", fixed = TRUE)[[1]][-1]))
   if (ChosenInds[1] != "all") {
+    if (nrow(genotypes) < max(ChosenInds, length(ChosenInds))) {
+      stop("File ", file, " contains fewer individuals than the maximum index specified in ChosenInds.")
+    }
     genotypes <- genotypes[ChosenInds, , drop = FALSE]
   }
   if ("U" %in% genotypes) {
@@ -68,6 +71,25 @@ resolveCompartments <- function(files, toBeCompartmentalized, compartmentSizes =
   }
 
   return(toBeCompartmentalized)
+}
+
+
+#' Resolve ChosenInds from a diem-formatted genotype file
+#'
+#' Extracts the number of individuals encoded in the first line of a
+#' diem-formatted genotype file and returns the corresponding index vector.
+#' The first line contains one character per individual plus an initial label,
+#' so the valid indices are \code{1:(nchar(line) - 1)}.
+#'
+#' @param file Character path to a diem-formatted genotype file.
+#'
+#' @return An integer vector of indices corresponding to individuals in the file.
+#' @keywords internal
+
+resolveChosenInds <- function(file) {
+  if (!file.exists(file)) stop("File not found: ", file)
+  x <- readLines(file, n = 1L, warn = FALSE)
+  return(1:(nchar(x) - 1L))
 }
 
 
@@ -135,25 +157,6 @@ markerAxis <- function(includedSites, ChosenSites = "all", tickDist) {
 
 
 
-#' Read genomic sites from a BED-like file
-#'
-#' Imports a BED-like file and optionally subsets sites.
-#'
-#' @param includedSites Path to a BED-like file, ideally output from `vcf2diem`.
-#' @param ChosenSites Logical or numeric vector specifying sites to retain, or `"all"` to keep all sites.
-#'
-#' @return A data frame containing the selected sites.
-#' @keywords internal
-#' @importFrom data.table fread
-readIncludedSites <- function(includedSites, ChosenSites = "all") {
-  bed <- data.table::fread(includedSites, header = TRUE, sep = "\t", data.table = FALSE)
-
-  if (inherits(ChosenSites, "logical") || inherits(ChosenSites, "numeric")) {
-    bed <- bed[ChosenSites, ]
-  }
-
-  return(bed)
-}
 
 
 # Original up to the diemr 1.4.1
